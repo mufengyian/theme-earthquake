@@ -1,0 +1,18 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "src/**/*", "env.d.ts", "astro.config.mjs"],
+  "exclude": ["dist", "templates"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@styles/*": ["src/assets/styles/*"],
+      "@utils/*": ["src/assets/utils/*"],
+      "@alpine-data/*": ["src/assets/alpine-data/*"]
+    },
+    "types": ["node"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"]
+  }
+}

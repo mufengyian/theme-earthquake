@@ -1,0 +1,29 @@
+apiVersion: theme.halo.run/v1alpha1
+kind: Theme
+metadata:
+  name: theme-earthquake
+  annotations:
+    "store.halo.run/bg-cover": "/themes/theme-earthquake/assets/images/bg-cover.svg"
+    # Recommended Halo apps
+    # 链接管理：https://www.halo.run/store/apps/app-hfbQg
+    # 图库管理：https://www.halo.run/store/apps/app-BmQJW
+    # 瞬间：https://www.halo.run/store/apps/app-SnwWD
+    # Shiki 代码高亮：https://www.halo.run/store/apps/app-kzloktzn
+    "store.halo.run/recommended-apps": '["app-hfbQg", "app-BmQJW", "app-SnwWD", "app-kzloktzn"]'
+spec:
+  displayName: Earthquake
+  author:
+    name: 风观
+    website: https://fg.ink
+  description: Earth 二开主题，简洁，激进，vibecoding，谨慎使用。
+  logo: /themes/theme-earthquake/assets/images/bg-cover.svg
+  homepage: https://github.com/mufengyian/theme-earthquake
+  repo: https://github.com/mufengyian/theme-earthquake
+  issues: https://github.com/mufengyian/theme-earthquake/issues
+  settingName: "theme-earthquake-setting"
+  configMapName: "theme-earthquake-configMap"
+  version: 1.0.0
+  requires: ">=2.22.0"
+  license:
+    - name: "GPL-3.0"
+      url: "https://github.com/mufengyian/theme-earthquake/blob/main/LICENSE"

@@ -1,0 +1,129 @@
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=2"
+/>
+<link
+  th:unless="${#strings.isEmpty(site.logo)}"
+  rel="preload"
+  th:href="${site.logo}"
+  as="image"
+/>
+<link
+  th:if="${(theme.config.style.font_family ?: 'system') != 'system'}"
+  rel="preconnect"
+  href="https://cdn.jsdelivr.net"
+  crossorigin
+/>
+<link
+  th:if="${theme.config.style.font_family == 'roboto'}"
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/@fontsource/roboto@5.2.10/400.css"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<link
+  th:if="${theme.config.style.font_family == 'roboto'}"
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/@fontsource/roboto@5.2.10/500.css"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<link
+  th:if="${theme.config.style.font_family == 'roboto'}"
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/@fontsource/roboto@5.2.10/700.css"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<link
+  th:if="${theme.config.style.font_family == 'jetbrains_mono'}"
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/@fontsource-variable/jetbrains-mono@5.2.8/index.css"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<link
+  th:if="${theme.config.style.font_family == 'misans'}"
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<link
+  th:if="${theme.config.style.font_family == 'misans'}"
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<link
+  th:if="${theme.config.style.font_family == 'misans'}"
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Bold.min.css"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<link
+  th:if="${theme.config.style.font_family == 'lxgw_wenkai'}"
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-light.css"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<link
+  th:if="${theme.config.style.font_family == 'lxgw_wenkai'}"
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<link
+  th:if="${theme.config.style.font_family == 'lxgw_wenkai'}"
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-bold.css"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<script is:inline th:inline="javascript">
+  window.i18nResources = {
+    "jsModule.colorSchemeSwitcher.dark": `[(#{jsModule.colorSchemeSwitcher.dark})]`,
+    "jsModule.colorSchemeSwitcher.light": `[(#{jsModule.colorSchemeSwitcher.light})]`,
+    "jsModule.colorSchemeSwitcher.auto": `[(#{jsModule.colorSchemeSwitcher.auto})]`,
+    "jsModule.share.qzone": `[(#{jsModule.share.qzone})]`,
+    "jsModule.share.weibo": `[(#{jsModule.share.weibo})]`,
+    "jsModule.share.douban": `[(#{jsModule.share.douban})]`,
+    "jsModule.share.wechat": `[(#{jsModule.share.wechat})]`,
+    "jsModule.share.native": `[(#{jsModule.share.native})]`,
+    "jsModule.share.windowTitle": `[(#{jsModule.share.windowTitle})]`,
+    "jsModule.upvote.networkError": `[(#{jsModule.upvote.networkError})]`,
+    "page.photos.photo": `[(#{page.photos.photo})]`,
+    "page.photos.download": `[(#{page.photos.download})]`,
+    "page.photos.share": `[(#{page.photos.share})]`,
+    "page.photos.viewDetail": `[(#{page.photos.viewDetail})]`,
+    "page.photos.selectPhoto": `[(#{page.photos.selectPhoto})]`,
+  };
+  window.colorScheme = /*[[${theme.config.style.color_scheme_settings?.color_scheme}]]*/ "system";
+  window.enableChangeColorScheme = /*[[${theme.config.style.color_scheme_settings?.enable_change_color_scheme}]]*/ false;
+  window.enableColorSchemeAnimation = /*[[${theme.config.style.color_scheme_settings?.enable_color_scheme_animation}]]*/ false;
+</script>
+<script>
+  import "../assets/main.ts";
+  import { initColorScheme } from "../assets/utils/color-scheme";
+
+  const earthWindow = window as Window &
+    typeof globalThis & {
+      colorScheme: "dark" | "light" | "system";
+      enableChangeColorScheme: boolean;
+    };
+
+  initColorScheme(earthWindow.colorScheme, earthWindow.enableChangeColorScheme);
+</script>
+<noscript>
+  <style>
+    body {
+      display: block !important;
+    }
+  </style>
+</noscript>

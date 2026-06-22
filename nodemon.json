@@ -1,0 +1,5 @@
+{
+  "verbose": false,
+  "watch": ["src/**/*", "public/**/*", "settings.yaml", "theme.yaml"],
+  "ext": "astro,ts,html,scss,css,yaml"
+}

@@ -1,0 +1,95 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package-release:
+    name: Package and release theme
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+        with:
+          version: 11.8.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build theme
+        run: pnpm build
+
+      - name: Resolve release version
+        id: version
+        shell: bash
+        run: |
+          VERSION="$(node -e "const fs = require('fs'); const match = fs.readFileSync('theme.yaml', 'utf8').match(/^\\s*version:\\s*['\\\"]?([^'\\\"\\s#]+)/m); if (!match) { process.exit(1); } process.stdout.write(match[1]);")"
+          TAG="v${VERSION#v}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: theme-earthquake-${{ steps.version.outputs.version }}
+          path: dist/*.zip
+          if-no-files-found: error
+
+      - name: Generate release notes
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        shell: bash
+        run: |
+          {
+            echo "Automated release for theme-earthquake $TAG."
+            echo
+            echo "## Commit"
+            echo "- SHA: \`$GITHUB_SHA\`"
+            echo
+            echo "### Message"
+            echo '```'
+            git log -1 --pretty=%B "$GITHUB_SHA"
+            echo '```'
+            echo
+            echo "### Changed files"
+            echo '```'
+            git show --name-status --format="" "$GITHUB_SHA"
+            echo '```'
+          } > release-notes.md
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        shell: bash
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists. Updating release notes and assets."
+            gh release upload "$TAG" dist/*.zip --clobber
+            gh release edit "$TAG" \
+              --target "$GITHUB_SHA" \
+              --title "$TAG" \
+              --notes-file release-notes.md
+            exit 0
+          fi
+
+          gh release create "$TAG" dist/*.zip \
+            --target "$GITHUB_SHA" \
+            --title "$TAG" \
+            --notes-file release-notes.md

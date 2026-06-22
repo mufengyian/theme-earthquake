@@ -1,0 +1,28 @@
+<aside
+  th:fragment="sidebar (prepend)"
+  class="earthquake-sidebar z-0 hidden w-72 shrink-0 lg:block"
+>
+  <div
+    class="earthquake-sidebar__inner sticky top-24 flex max-h-[calc(100vh-7.5rem)] flex-col gap-4 overflow-y-auto px-1 pb-2 pt-1"
+  >
+    <th:block th:with="widgets = ${theme.config.sidebar?.widgets}">
+      <th:block th:if="${prepend != null}">
+        <th:block th:replace="${prepend}" />
+      </th:block>
+
+      <th:block th:if="${#lists.isEmpty(widgets)}">
+        <th:block th:replace="~{modules/widgets/popular-posts}" />
+        <th:block th:replace="~{modules/widgets/categories}" />
+        <th:block th:replace="~{modules/widgets/tags}" />
+      </th:block>
+
+      <th:block th:unless="${#lists.isEmpty(widgets)}">
+        <th:block th:each="widget : ${widgets}">
+          <th:block th:with="options = ${widget.options}">
+            <th:block th:replace="~{'modules/widgets/'+${widget.value}}" />
+          </th:block>
+        </th:block>
+      </th:block>
+    </th:block>
+  </div>
+</aside>

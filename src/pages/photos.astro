@@ -1,0 +1,274 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <Fragment slot="head">
+    <title
+      th:text="|${title ?: #messages.msg('page.photos.title')} - ${site.title}|"
+    >
+    </title>
+  </Fragment>
+
+  <section class="mx-auto mt-6 max-w-7xl px-4 lg:px-6">
+    <div class="z-0 min-w-0">
+      <div class="rounded-xl bg-white p-4 dark:bg-slate-800">
+        <h1
+          class="mb-9 text-2xl font-medium dark:text-slate-50"
+          th:text="${title ?: #messages.msg('page.photos.title')}"
+        >
+        </h1>
+
+        <th:block
+          th:unless="${pluginFinder.available('PluginPhotos', '>=2.0.0')}"
+        >
+          <div class="mb-8">
+            <nav class="flex flex-wrap gap-4" aria-label="Tabs">
+              <a
+                th:href="@{/photos}"
+                class="rounded bg-gray-100 px-1 py-0.5 text-sm text-gray-900 hover:bg-gray-200 dark:bg-slate-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+                th:classappend="${#lists.isEmpty(param.group) ? '!bg-gray-200 dark:!bg-slate-700 dark:!text-slate-100 ring-2 ring-gray-300 dark:ring-slate-600' : ''}"
+              >
+                <span th:text="#{common.all}"></span>
+              </a>
+              <a
+                th:each="group : ${photoFinder.groupBy()}"
+                th:href="@{|/photos?group=${group.metadata.name}|}"
+                class="rounded bg-gray-100 px-1 py-0.5 text-sm text-gray-900 hover:bg-gray-200 dark:bg-slate-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+                th:classappend="${#lists.contains(param.group, group.metadata.name) ? '!bg-gray-200 dark:!bg-slate-700 dark:!text-slate-100 ring-2 ring-gray-300 dark:ring-slate-600' : ''}"
+                th:text="${group.spec.displayName}"
+              >
+              </a>
+            </nav>
+          </div>
+
+          <div
+            id="photos-gallery"
+            class="columns-1 gap-3 pb-12 sm:columns-2 sm:gap-3 md:columns-3 lg:columns-4 [&>article:not(:first-child)]:mt-3"
+          >
+            <article
+              th:each="photo : ${photos.items}"
+              class="photo-gallery-item group relative h-auto max-w-full break-inside-avoid"
+            >
+              <button
+                type="button"
+                class="photo-gallery-link block w-full cursor-zoom-in overflow-hidden rounded-lg border-0 bg-gray-100 p-0 text-left dark:bg-slate-700"
+                th:attr="data-preview-src=${photo.spec.url}"
+                th:aria-label="${photo.spec.displayName}"
+              >
+                <span class="photo-full-url hidden" th:text="${photo.spec.url}"
+                ></span>
+                <span
+                  class="photo-data-title hidden"
+                  th:text="${not #strings.isEmpty(photo.spec.displayName) ? photo.spec.displayName : photo.metadata.name}"
+                >
+                </span>
+                <img
+                  class="animated fadeIn w-full transform-gpu rounded-lg object-cover transition duration-300 group-hover:scale-105"
+                  th:src="${photo.spec.url}"
+                  th:srcset="|${thumbnail.gen(photo.spec.url, 's')} 400w,
+                              ${thumbnail.gen(photo.spec.url, 'm')} 800w,
+                              ${thumbnail.gen(photo.spec.url, 'l')} 1200w|"
+                  sizes="(max-width: 1200px) 100vw, 1200px"
+                  th:alt="${photo.spec.displayName}"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+            </article>
+          </div>
+        </th:block>
+
+        <th:block th:if="${pluginFinder.available('PluginPhotos', '>=2.0.0')}">
+          <div class="mb-8">
+            <nav class="flex flex-wrap gap-4" aria-label="Tabs">
+              <a
+                th:href="@{${photoUrl.list()}}"
+                class="rounded bg-gray-100 px-1 py-0.5 text-sm text-gray-900 hover:bg-gray-200 dark:bg-slate-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+                th:classappend="${#lists.isEmpty(param.group) ? '!bg-gray-200 dark:!bg-slate-700 dark:!text-slate-100 ring-2 ring-gray-300 dark:ring-slate-600' : ''}"
+              >
+                <span th:text="#{common.all}"></span>
+              </a>
+              <a
+                th:each="group : ${groups}"
+                th:href="@{${photoUrl.list(group.metadata.name)}}"
+                class="rounded bg-gray-100 px-1 py-0.5 text-sm text-gray-900 hover:bg-gray-200 dark:bg-slate-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+                th:classappend="${#lists.contains(param.group, group.metadata.name) ? '!bg-gray-200 dark:!bg-slate-700 dark:!text-slate-100 ring-2 ring-gray-300 dark:ring-slate-600' : ''}"
+                th:text="${group.spec.displayName}"
+              >
+              </a>
+            </nav>
+          </div>
+
+          <div
+            id="photos-gallery"
+            class="columns-1 gap-3 pb-12 sm:columns-2 sm:gap-3 md:columns-3 lg:columns-4 [&>article:not(:first-child)]:mt-3"
+          >
+            <article
+              th:each="photo : ${photos.items}"
+              class="photo-gallery-item group relative h-auto max-w-full break-inside-avoid"
+            >
+              <button
+                type="button"
+                class="photo-gallery-link block w-full cursor-zoom-in overflow-hidden rounded-lg border-0 bg-gray-100 p-0 text-left dark:bg-slate-700"
+                th:attr="data-preview-src=${photo.spec.url},data-preview-width=${photo.exif != null and photo.exif.imageWidth != null ? photo.exif.imageWidth : 0},data-preview-height=${photo.exif != null and photo.exif.imageHeight != null ? photo.exif.imageHeight : 0}"
+                th:aria-label="${photo.spec.displayName}"
+              >
+                <span
+                  class="photo-detail-url hidden"
+                  th:text="@{${photoUrl.detail(photo)}}"></span>
+                <span class="photo-full-url hidden" th:text="${photo.spec.url}"
+                ></span>
+                <span
+                  th:if="${not #strings.isEmpty(photo.spec.groupName)}"
+                  class="photo-group-name hidden"
+                  th:text="${photo.spec.groupName}"
+                >
+                </span>
+                <span
+                  th:if="${not #strings.isEmpty(photo.spec.groupName)}"
+                  class="photo-group-url hidden"
+                  th:text="@{${photoUrl.list(photo.spec.groupName)}}"
+                >
+                </span>
+                <span
+                  class="photo-data-title hidden"
+                  th:text="${not #strings.isEmpty(photo.spec.displayName) ? photo.spec.displayName : photo.metadata.name}"
+                >
+                </span>
+                <span
+                  th:if="${not #strings.isEmpty(photo.spec.description)}"
+                  class="photo-data-description hidden"
+                  th:text="${photo.spec.description}"
+                >
+                </span>
+                <span
+                  th:if="${photo.exif != null and photo.exif.dateTimeOriginal != null}"
+                  class="photo-data-date hidden"
+                  th:text="${#dates.format(photo.exif.dateTimeOriginal,'yyyy-MM-dd HH:mm')}"
+                >
+                </span>
+                <span
+                  th:if="${photo.exif != null and (not #strings.isEmpty(photo.exif.make) or not #strings.isEmpty(photo.exif.model))}"
+                  class="photo-data-camera hidden"
+                  th:text="${#strings.trim((photo.exif.make ?: '') + ' ' + (photo.exif.model ?: ''))}"
+                >
+                </span>
+                <span
+                  th:if="${photo.exif != null and photo.exif.fNumber != null}"
+                  class="photo-meta-item hidden"
+                  th:text="|f/${photo.exif.fNumber}|"></span>
+                <span
+                  th:if="${photo.exif != null and not #strings.isEmpty(photo.exif.exposureTime)}"
+                  class="photo-meta-item hidden"
+                  th:text="${photo.exif.exposureTime}"></span>
+                <span
+                  th:if="${photo.exif != null and photo.exif.iso != null}"
+                  class="photo-meta-item hidden"
+                  th:text="|ISO ${photo.exif.iso}|"></span>
+                <span
+                  th:if="${photo.exif != null and photo.exif.focalLength != null}"
+                  class="photo-meta-item hidden"
+                  th:text="|${photo.exif.focalLength}mm|"></span>
+
+                <figure class="relative">
+                  <img
+                    class="animated fadeIn w-full transform-gpu rounded-lg object-cover transition duration-300 group-hover:scale-105"
+                    th:src="${not #strings.isEmpty(photo.spec.cover) ? photo.spec.cover : photo.spec.url}"
+                    th:srcset="|${thumbnail.gen(photo.spec.url, 's')} 400w,
+                                ${thumbnail.gen(photo.spec.url, 'm')} 800w,
+                                ${thumbnail.gen(photo.spec.url, 'l')} 1200w|"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    th:alt="${photo.spec.displayName}"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption
+                    class="pointer-events-none absolute inset-x-0 bottom-0 rounded-b-lg bg-gradient-to-t from-black/75 via-black/30 to-transparent p-3 pt-12 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  >
+                    <p
+                      class="truncate text-sm font-medium text-white"
+                      th:if="${not #strings.isEmpty(photo.spec.displayName)}"
+                      th:text="${photo.spec.displayName}"
+                    >
+                    </p>
+                    <p
+                      class="mt-1 line-clamp-2 text-xs leading-5 text-white/80"
+                      th:if="${not #strings.isEmpty(photo.spec.description)}"
+                      th:text="${photo.spec.description}"
+                    >
+                    </p>
+                    <div
+                      class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-white/90"
+                    >
+                      <span
+                        th:if="${photo.exif != null and not #strings.isEmpty(photo.exif.model)}"
+                        class="inline-flex items-center gap-1"
+                      >
+                        <span class="icon-[tabler--camera] text-[10px]"></span>
+                        <span th:text="${photo.exif.model}"></span>
+                      </span>
+                      <span
+                        th:if="${photo.exif != null and photo.exif.fNumber != null}"
+                        class="inline-flex items-center gap-1"
+                      >
+                        <span class="icon-[tabler--aperture] text-[10px]"
+                        ></span>
+                        <span th:text="|f/${photo.exif.fNumber}|"></span>
+                      </span>
+                      <span
+                        th:if="${photo.exif != null and not #strings.isEmpty(photo.exif.exposureTime)}"
+                        class="inline-flex items-center gap-1"
+                      >
+                        <span class="icon-[tabler--clock] text-[10px]"></span>
+                        <span th:text="${photo.exif.exposureTime}"></span>
+                      </span>
+                      <span
+                        th:if="${photo.exif != null and photo.exif.iso != null}"
+                        class="inline-flex items-center gap-1"
+                      >
+                        <span class="icon-[tabler--sun-electricity] text-[10px]"
+                        ></span>
+                        <span th:text="${photo.exif.iso}"></span>
+                      </span>
+                      <span
+                        th:if="${photo.exif != null and photo.exif.focalLength != null}"
+                        class="inline-flex items-center gap-1"
+                      >
+                        <span class="icon-[tabler--telescope] text-[10px]"
+                        ></span>
+                        <span th:text="|${photo.exif.focalLength}mm|"></span>
+                      </span>
+                    </div>
+                    <div
+                      th:if="${not #lists.isEmpty(photo.spec.tags)}"
+                      class="mt-2 flex flex-wrap gap-1.5"
+                    >
+                      <span
+                        th:each="tag : ${photo.spec.tags}"
+                        class="photo-data-tag rounded bg-white/15 px-1.5 py-0.5 text-xs text-white/85 backdrop-blur"
+                        th:text="${'#' + tag}"
+                      >
+                      </span>
+                    </div>
+                  </figcaption>
+                </figure>
+              </button>
+              <a
+                class="absolute right-3 top-3 z-10 inline-flex size-9 items-center justify-center rounded-lg bg-black/45 text-white opacity-0 shadow-lg backdrop-blur transition hover:bg-black/65 focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white group-hover:opacity-100"
+                th:href="@{${photoUrl.detail(photo)}}"
+                th:aria-label="${photo.spec.displayName}"
+              >
+                <span class="icon-[tabler--info-circle] text-lg"></span>
+              </a>
+            </article>
+          </div>
+        </th:block>
+
+        <th:block
+          th:replace="~{modules/pagination :: pagination(context = '/photos/', prevUrl = ${photos.prevUrl}, nextUrl = ${photos.nextUrl}, totalPages = ${photos.totalPages}, page = ${photos.page}, hasPrevious = ${photos.hasPrevious()}, hasNext = ${photos.hasNext()})}"
+        ></th:block>
+      </div>
+    </div>
+  </section>
+</Layout>

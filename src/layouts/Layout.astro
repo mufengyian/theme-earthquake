@@ -1,0 +1,39 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+---
+
+<!doctype html>
+<html th:lang="${#locale.toLanguageTag}">
+  <head>
+    <BaseHead />
+
+    <slot name="head" />
+  </head>
+  <body
+    class="bg-slate-50 dark:bg-slate-900"
+    th:with="fontClass = ${theme.config.style.font_family == 'roboto' ? 'font-roboto' : (theme.config.style.font_family == 'jetbrains_mono' ? 'font-jetbrains-mono' : (theme.config.style.font_family == 'misans' ? 'font-misans' : (theme.config.style.font_family == 'lxgw_wenkai' ? 'font-lxgw-wenkai' : '')))}, stylePreset = ${'theme-preset-' + (theme.config.style.style_preset ?: 'earthquake')}"
+    th:classappend="${fontClass} + ' ' + ${stylePreset}"
+  >
+    <Header />
+
+    <main>
+      <slot />
+    </main>
+
+    <Footer />
+
+    <button
+      th:if="${theme.config.layout.show_scroll_button != false}"
+      type="button"
+      id="btn-scroll-to-top"
+      th:aria-label="#{fragment.layout.toTop}"
+      class="fixed bottom-5 right-5 flex items-center justify-center rounded-full bg-white p-3 opacity-0 shadow transition-all duration-300 hover:opacity-70 hover:shadow-lg dark:bg-slate-600 lg:bottom-10 lg:right-10"
+    >
+      <span
+        class="icon-[tabler--chevron-up] text-2xl text-gray-600 dark:text-slate-200"
+      ></span>
+    </button>
+  </body>
+</html>

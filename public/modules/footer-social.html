@@ -1,0 +1,44 @@
+<th:block th:with="social_media = ${theme.config.footer.social_media}">
+  <div
+    th:unless="${#lists.isEmpty(social_media)}"
+    class="mb-4 flex justify-center space-x-6"
+  >
+    <th:block th:each="item : ${social_media}">
+      <a
+        th:if="${item.url_type == 'normal'}"
+        th:href="${item.url}"
+        class="text-gray-500 hover:text-gray-900 dark:hover:text-white [&>svg]:size-5"
+        th:title="${item.name}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div
+          th:if="${item.iconify == null}"
+          th:classappend="${item.icon}"
+          class="size-5"
+        ></div>
+        <th:block
+          th:unless="${item.iconify == null}"
+          th:utext="${item.iconify.value}"
+        ></th:block>
+      </a>
+      <button
+        th:if="${item.url_type == 'image'}"
+        type="button"
+        th:attr="data-preview-src=${item.url},data-preview-title=${item.name}"
+        class="border-0 bg-transparent p-0 text-gray-500 hover:text-gray-900 dark:hover:text-white [&>svg]:size-5"
+        th:title="${item.name}"
+      >
+        <div
+          th:if="${item.iconify == null}"
+          th:classappend="${item.icon}"
+          class="size-5"
+        ></div>
+        <th:block
+          th:unless="${item.iconify == null}"
+          th:utext="${item.iconify.value}"
+        ></th:block>
+      </button>
+    </th:block>
+  </div>
+</th:block>

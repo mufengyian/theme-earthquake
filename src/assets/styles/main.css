@@ -1,0 +1,424 @@
+@reference "./tailwind.css";
+
+[x-cloak] {
+  display: none !important;
+}
+
+html {
+  scroll-padding-top: 100px;
+  scroll-behavior: smooth;
+  scrollbar-color: rgba(100, 116, 139, 0.55) transparent;
+  scrollbar-width: thin;
+}
+
+html.dark {
+  scrollbar-color: rgba(148, 163, 184, 0.55) transparent;
+}
+
+html::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 116, 139, 0.5);
+  background-clip: content-box;
+  border: 3px solid transparent;
+  border-radius: 999px;
+}
+
+html.dark::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.48);
+}
+
+.main {
+  margin: 0 auto;
+}
+
+body.font-roboto,
+body.font-roboto button,
+body.font-roboto input,
+body.font-roboto select,
+body.font-roboto textarea {
+  font-family:
+    "Roboto",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+body.font-jetbrains-mono,
+body.font-jetbrains-mono button,
+body.font-jetbrains-mono input,
+body.font-jetbrains-mono select,
+body.font-jetbrains-mono textarea {
+  font-family:
+    "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, monospace;
+}
+
+body.font-misans,
+body.font-misans button,
+body.font-misans input,
+body.font-misans select,
+body.font-misans textarea {
+  font-family:
+    "MiSans",
+    "MiSansLatin",
+    "Noto Sans SC",
+    "Microsoft YaHei",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+body.font-lxgw-wenkai,
+body.font-lxgw-wenkai button,
+body.font-lxgw-wenkai input,
+body.font-lxgw-wenkai select,
+body.font-lxgw-wenkai textarea {
+  font-family:
+    "LXGW WenKai", "Noto Serif SC", "STKaiti", "KaiTi", "Microsoft YaHei",
+    ui-serif, serif;
+}
+
+body.font-roboto code,
+body.font-roboto pre,
+body.font-misans code,
+body.font-misans pre,
+body.font-lxgw-wenkai code,
+body.font-lxgw-wenkai pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+body {
+  /* Single hue variable drives the entire palette via OKLCH.
+     Each preset below just overrides --hue; the 8 semantic tokens
+     derive automatically so adding a new preset is one line. */
+  --hue: 220;
+
+  --earthquake-bg:            oklch(0.98  0.005 var(--hue));
+  --earthquake-surface:       oklch(1     0     0);
+  --earthquake-surface-muted: oklch(0.955 0.008 var(--hue));
+  --earthquake-border:        oklch(0.91  0.015 var(--hue) / 0.85);
+  --earthquake-text:          oklch(0.13  0.015 var(--hue));
+  --earthquake-muted:         oklch(0.53  0.04  var(--hue));
+  --earthquake-primary:       oklch(0.52  0.19  var(--hue));
+  --earthquake-primary-soft:  oklch(0.52  0.19  var(--hue) / 0.13);
+
+  background-color: var(--earthquake-bg);
+  color: var(--earthquake-text);
+}
+
+body.bg-slate-50,
+body.dark\:bg-slate-900 {
+  background-color: var(--earthquake-bg);
+}
+
+.dark body {
+  --earthquake-bg:            oklch(0.17 0.01  var(--hue));
+  --earthquake-surface:       oklch(0.22 0.012 var(--hue));
+  --earthquake-surface-muted: oklch(0.27 0.014 var(--hue));
+  --earthquake-border:        oklch(0.36 0.02  var(--hue) / 0.85);
+  --earthquake-text:          oklch(0.97 0.006 var(--hue));
+  --earthquake-muted:         oklch(0.77 0.04  var(--hue));
+  --earthquake-primary:       oklch(0.72 0.16  var(--hue));
+  --earthquake-primary-soft:  oklch(0.72 0.16  var(--hue) / 0.16);
+}
+
+/* Light presets — override --hue; light/dark tokens derive automatically */
+body.theme-preset-earthquake { --hue: 220; }
+body.theme-preset-light      { --hue: 220; }
+body.theme-preset-corporate,
+body.theme-preset-business   { --hue: 215; }
+body.theme-preset-winter,
+body.theme-preset-nord,
+body.theme-preset-aqua       { --hue: 200; }
+body.theme-preset-emerald,
+body.theme-preset-garden,
+body.theme-preset-forest     { --hue: 148; }
+body.theme-preset-cupcake,
+body.theme-preset-valentine  { --hue: 340; }
+body.theme-preset-bumblebee,
+body.theme-preset-lemonade   { --hue: 58;  }
+body.theme-preset-retro,
+body.theme-preset-autumn,
+body.theme-preset-caramellatte { --hue: 28; }
+body.theme-preset-cyberpunk,
+body.theme-preset-acid,
+body.theme-preset-cmyk       { --hue: 285; }
+body.theme-preset-pastel,
+body.theme-preset-fantasy,
+body.theme-preset-silk       { --hue: 285; }
+body.theme-preset-lofi,
+body.theme-preset-wireframe  {
+  --hue: 0;
+  --earthquake-primary:      oklch(0.22 0.005 0);
+  --earthquake-primary-soft: oklch(0.22 0.005 0 / 0.1);
+}
+
+/* Always-dark presets — force dark palette regardless of user's light/dark preference */
+body.theme-preset-dark,
+body.theme-preset-night,
+body.theme-preset-dim,
+body.theme-preset-black,
+body.theme-preset-abyss,
+body.theme-preset-synthwave,
+body.theme-preset-halloween,
+body.theme-preset-luxury,
+body.theme-preset-dracula,
+body.theme-preset-coffee,
+body.theme-preset-sunset {
+  --earthquake-bg:            oklch(0.15 0.012 var(--hue));
+  --earthquake-surface:       oklch(0.20 0.015 var(--hue));
+  --earthquake-surface-muted: oklch(0.25 0.018 var(--hue));
+  --earthquake-border:        oklch(0.34 0.022 var(--hue) / 0.85);
+  --earthquake-text:          oklch(0.97 0.006 var(--hue));
+  --earthquake-muted:         oklch(0.77 0.04  var(--hue));
+  --earthquake-primary:       oklch(0.72 0.16  var(--hue));
+  --earthquake-primary-soft:  oklch(0.72 0.16  var(--hue) / 0.16);
+}
+body.theme-preset-dark      { --hue: 270; }
+body.theme-preset-night     { --hue: 235; }
+body.theme-preset-dim       { --hue: 220; }
+body.theme-preset-black     { --hue: 0;   --earthquake-primary: oklch(0.65 0.005 0); --earthquake-primary-soft: oklch(0.65 0.005 0 / 0.12); }
+body.theme-preset-abyss     { --hue: 225; }
+body.theme-preset-synthwave { --hue: 310; }
+body.theme-preset-halloween { --hue: 28;  }
+body.theme-preset-luxury    { --hue: 45;  --earthquake-primary: oklch(0.78 0.15 45); --earthquake-primary-soft: oklch(0.78 0.15 45 / 0.16); }
+body.theme-preset-dracula   { --hue: 305; }
+body.theme-preset-coffee    { --hue: 30;  }
+body.theme-preset-sunset    { --hue: 22;  }
+
+body :is(.bg-white, .dark\:bg-slate-800, .dark\:bg-gray-800),
+body :is(footer, #header-menu) {
+  background-color: var(--earthquake-surface);
+}
+
+body :is(.bg-slate-50, .dark\:bg-slate-900) {
+  background-color: var(--earthquake-bg);
+}
+
+body :is(.bg-gray-50, .bg-gray-100, .dark\:bg-slate-700, .dark\:bg-slate-600) {
+  background-color: var(--earthquake-surface-muted);
+}
+
+body
+  :is(
+    .text-gray-900,
+    .text-gray-800,
+    .text-gray-700,
+    .dark\:text-slate-50,
+    .dark\:text-white
+  ) {
+  color: var(--earthquake-text);
+}
+
+body
+  :is(
+    .text-gray-500,
+    .text-gray-600,
+    .dark\:text-slate-400,
+    .dark\:text-slate-300
+  ) {
+  color: var(--earthquake-muted);
+}
+
+body :is(.text-blue-600, .hover\:text-blue-600:hover, .dark\:text-blue-400) {
+  color: var(--earthquake-primary);
+}
+
+body :is(.border-gray-100, .border-gray-200, .dark\:border-slate-700) {
+  border-color: var(--earthquake-border);
+}
+
+body :is(.ring-blue-500) {
+  --tw-ring-color: var(--earthquake-primary);
+}
+
+body .markdown-body a {
+  color: var(--earthquake-primary);
+}
+
+.menu-sticky {
+  @apply drop-shadow-md backdrop-blur-lg;
+}
+
+#header-menu.header-menu-glass {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, var(--header-glass-opacity, 0.72));
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  -webkit-backdrop-filter: saturate(180%)
+    blur(calc(24px * var(--header-glass-blur-factor, 0.75)));
+  backdrop-filter: saturate(180%)
+    blur(calc(24px * var(--header-glass-blur-factor, 0.75)));
+}
+
+.dark #header-menu.header-menu-glass {
+  border-bottom-color: rgba(148, 163, 184, 0.18);
+  background: rgba(15, 23, 42, var(--header-glass-opacity, 0.68));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+}
+
+.content-wrapper {
+  transition: all 0.35s cubic-bezier(0.5, 0, 0.5, 1);
+}
+
+.earthquake-sidebar__inner {
+  overscroll-behavior: contain;
+  scroll-padding-bottom: 0.5rem;
+  scroll-padding-top: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
+}
+
+.earthquake-sidebar__inner::-webkit-scrollbar {
+  width: 6px;
+}
+
+.earthquake-sidebar__inner::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background-color: rgba(148, 163, 184, 0.55);
+}
+
+.detail-sidebar-layout {
+  .earthquake-sidebar {
+    @apply mt-8 lg:mt-0 lg:w-1/4;
+  }
+
+  .detail-toc-desktop {
+    animation-duration: 0.6s;
+  }
+
+  .content-wrapper {
+    @apply min-w-0;
+  }
+
+  .post-detail {
+    animation-duration: 0.6s;
+  }
+}
+
+.post-feature-image {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.comment-widget {
+  // Borderless: the comment area blends into the page instead of sitting in a
+  // big white card. A thin top rule separates it from the content above.
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--earthquake-border);
+}
+
+// Theme the Halo comment component everywhere it renders (post, page, moment,
+// photo) so it follows the active preset and dark mode instead of using its
+// own default palette. Halo mounts `<halo:comment>` as a custom element.
+halo-comment-widget,
+.comment-widget {
+  --halo-cw-primary-1-color: var(--earthquake-primary);
+  --halo-cw-primary-2-color: var(--earthquake-primary-soft);
+  --halo-cw-text-1-color: var(--earthquake-text);
+  --halo-cw-text-2-color: var(--earthquake-muted);
+  --halo-cw-text-3-color: var(--earthquake-muted);
+  --halo-cw-muted-1-color: var(--earthquake-border);
+  --halo-cw-muted-2-color: var(--earthquake-surface-muted);
+  --halo-cw-muted-3-color: var(--earthquake-surface-muted);
+  --halo-cw-base-color: var(--earthquake-surface);
+  --halo-cw-base-rounded: 0.75rem;
+  --halo-cw-base-font-size: 0.95rem;
+  --halo-cw-avatar-rounded: 50%;
+  --halo-cw-avatar-size: 2.5rem;
+}
+
+.animated.fadeIn {
+  animation-name: fadeIn;
+  animation-duration: 0.6s;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toc-list-item > .toc-list {
+  @apply my-3 ml-3 space-y-1 border-l pl-2;
+}
+
+.pattern-header-text {
+  text-shadow: 2px 2px 10px #000;
+}
+
+.is-active-link {
+  @apply rounded bg-gray-100 dark:bg-slate-600;
+}
+
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m12 13.171l4.95-4.95l1.414 1.415L12 16L5.636 9.636L7.05 8.222z'/%3E%3C/svg%3E")
+    right 0.3em center no-repeat;
+  align-items: center;
+  padding-right: 1.85em;
+  display: inline-flex;
+}
+
+/* Disable the browser's default cross-fade; the JS-animated clip-path
+   handles the circular reveal instead. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+/* Give the header its own transition layer so its backdrop-filter is captured
+   correctly and it doesn't go transparent during the root clip-path animation. */
+#header-menu {
+  view-transition-name: navbar;
+}
+
+::view-transition-old(navbar),
+::view-transition-new(navbar) {
+  animation: none;
+}
+
+/* Respect users who prefer reduced motion: drop entrance animations,
+   smooth scrolling and transitions instead of forcing them. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

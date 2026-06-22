@@ -1,0 +1,6 @@
+node_modules
+.astro
+templates
+dist
+*.min.js
+pnpm-lock.yaml

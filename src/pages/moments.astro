@@ -1,0 +1,174 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <Fragment slot="head">
+    <title
+      th:text="|${title ?: #messages.msg('page.moments.title')} - ${site.title}|"
+    >
+    </title>
+  </Fragment>
+  <section class="mx-auto mt-6 max-w-7xl px-4 lg:px-6">
+    <div class="z-0 min-w-0">
+      <div class="rounded-xl bg-white p-4 dark:bg-slate-800">
+        <h1
+          class="mb-9 text-2xl font-medium dark:text-slate-50"
+          th:text="${title ?: #messages.msg('page.moments.title')}"
+        >
+        </h1>
+        <div class="mb-8">
+          <nav class="flex flex-wrap gap-4" aria-label="Tabs">
+            <a
+              th:href="@{/moments}"
+              class="rounded bg-gray-100 px-1 py-0.5 text-sm text-gray-900 hover:bg-gray-200 dark:bg-slate-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+              th:classappend="${#lists.isEmpty(param.tag) ? '!bg-gray-200 dark:!bg-slate-700 dark:!text-slate-100 ring-2 ring-gray-300 dark:ring-slate-600' : ''}"
+            >
+              <span th:text="#{common.all}"></span>
+            </a>
+            <a
+              th:each="tag : ${tags}"
+              th:href="@{|?tag=${tag.name}|}"
+              class="rounded bg-gray-100 px-1 py-0.5 text-sm text-gray-900 hover:bg-gray-200 dark:bg-slate-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+              th:classappend="${#lists.contains(param.tag, tag.name) ? '!bg-gray-200 dark:!bg-slate-700 dark:!text-slate-100 ring-2 ring-gray-300 dark:ring-slate-600' : ''}"
+            >
+              <span th:text="|#${tag.name}|"></span>
+              <sup th:text="${tag.momentCount}"></sup>
+            </a>
+          </nav>
+        </div>
+        <div>
+          <ul
+            role="list"
+            class="divide-y divide-gray-100 dark:divide-slate-700"
+            x-data="upvote('moment','moment.halo.run','moments')"
+          >
+            <li
+              th:each="moment : ${moments.items}"
+              th:attr="x-data=|{name:'${moment.metadata.name}',showComment:false}|"
+              th:with="content=${moment.spec.content}"
+              class="animated fadeIn w-full py-5"
+            >
+              <div class="min-w-0">
+                <div
+                  th:utext="${content.html}"
+                  class="moment-content prose prose-base !max-w-none break-words dark:prose-invert prose-pre:p-0"
+                >
+                </div>
+                <div
+                  th:if="${content != null and not #lists.isEmpty(content.medium)}"
+                  th:with="mediaCount=${#lists.size(content.medium)}"
+                  th:classappend="${' moment-media-count-' + mediaCount}"
+                  class="moment-media mt-4 grid gap-2"
+                >
+                  <div
+                    class="contents"
+                    th:each="media, mediaStat : ${content.medium}"
+                  >
+                    <figure
+                      th:if="${#strings.equals(media.type,'PHOTO')}"
+                      th:classappend="${mediaCount == 5 and mediaStat.index < 2 ? ' moment-media-item-wide' : ''}"
+                      class="moment-media-item group rounded-lg bg-gray-100 dark:bg-slate-700"
+                    >
+                      <img
+                        class="size-full cursor-zoom-in transform-gpu object-cover transition duration-300 group-hover:scale-105"
+                        th:src="${media.url}"
+                        th:srcset="|${thumbnail.gen(media.url, 's')} 400w,
+                                    ${thumbnail.gen(media.url, 'm')} 800w,
+                                    ${thumbnail.gen(media.url, 'l')} 1200w|"
+                        sizes="(max-width: 640px) 100vw, 576px"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </figure>
+                    <video
+                      th:if="${#strings.equals(media.type,'VIDEO')}"
+                      th:src="${media.url}"
+                      th:classappend="${mediaCount == 5 and mediaStat.index < 2 ? ' moment-media-item-wide' : ''}"
+                      controls
+                      preload="metadata"
+                      class="moment-media-item max-w-full rounded-lg bg-black object-cover"
+                    ></video>
+                    <audio
+                      th:if="${#strings.equals(media.type,'AUDIO')}"
+                      th:src="${media.url}"
+                      controls
+                      class="moment-media-audio w-full max-w-xl"
+                    ></audio>
+                    <a
+                      th:if="${#strings.equals(media.type,'POST')}"
+                      th:href="${media.url}"
+                      th:classappend="${mediaCount == 5 and mediaStat.index < 2 ? ' moment-media-item-wide' : ''}"
+                      class="moment-media-item moment-media-post rounded-lg bg-gray-50 text-sm text-gray-700 transition hover:bg-gray-100 hover:text-gray-900 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600 dark:hover:text-white"
+                    >
+                      <span
+                        class="icon-[tabler--file-text] shrink-0 text-xl"
+                      ></span>
+                      <span class="min-w-0 truncate" th:text="${media.url}"
+                      ></span>
+                    </a>
+                  </div>
+                </div>
+                <div class="mt-3 flex items-center gap-4">
+                  <div
+                    class="inline-flex cursor-pointer items-center text-sm text-gray-400 transition-all hover:text-red-700 dark:text-slate-400 dark:hover:text-red-700"
+                    x-bind:class="{'!text-red-700': upvoted(name)}"
+                    @click="handleUpvote(name)"
+                  >
+                    <i
+                      x-show="upvoted(name)"
+                      x-cloak
+                      class="icon-[tabler--heart-filled] size-3"></i>
+                    <i
+                      x-show="!upvoted(name)"
+                      x-cloak
+                      class="icon-[tabler--heart] size-3"></i>
+                    <span
+                      class="ml-1"
+                      th:attr="data-upvote-moment-name=${moment.metadata.name}"
+                      th:text="${moment.stats.upvote}"
+                    >
+                    </span>
+                  </div>
+                  <div
+                    class="inline-flex cursor-pointer items-center text-sm text-gray-400 transition-all hover:text-black dark:text-slate-400 dark:hover:text-slate-300"
+                    :class="{'!text-black dark:!text-slate-300':showComment}"
+                    x-on:click="showComment = !showComment"
+                  >
+                    <i class="icon-[tabler--message-circle] size-3"></i>
+                    <span
+                      class="ml-1"
+                      th:text="${moment.stats.approvedComment}"
+                    >
+                    </span>
+                  </div>
+                  <div
+                    class="inline-flex items-center text-sm text-gray-400 transition-all dark:text-slate-400"
+                  >
+                    <i class="icon-[tabler--calendar] size-3"></i>
+                    <span
+                      class="ml-1"
+                      th:text="${#dates.format(moment.spec.releaseTime,'yyyy-MM-dd')}"
+                    >
+                    </span>
+                  </div>
+                </div>
+
+                <div class="mt-2" x-show="showComment" x-cloak>
+                  <halo:comment
+                    group="moment.halo.run"
+                    kind="Moment"
+                    th:attr="name=${moment.metadata.name}"></halo:comment>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <th:block
+          th:replace="~{modules/pagination :: pagination(context = '/moments/', prevUrl = ${moments.prevUrl}, nextUrl = ${moments.nextUrl}, totalPages = ${moments.totalPages}, page = ${moments.page}, hasPrevious = ${moments.hasPrevious()}, hasNext = ${moments.hasNext()})}"
+        ></th:block>
+      </div>
+    </div>
+  </section>
+</Layout>

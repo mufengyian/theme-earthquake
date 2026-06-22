@@ -1,0 +1,285 @@
+<header
+  id="header-menu"
+  class="sticky top-0 z-10 flex h-[4.5rem] bg-white py-3 shadow-sm transition-all dark:bg-gray-800"
+  th:classappend="${(theme.config.layout.enable_glass_navbar ?: false) ? ' header-menu-glass' : ''}"
+  th:style="|--header-glass-opacity: ${theme.config.layout.glass_navbar_opacity ?: '0.72'}; --header-glass-blur-factor: ${theme.config.layout.glass_navbar_blur ?: '0.75'};|"
+  th:with="menu = ${menuFinder.getPrimary()}, siteTitleSize = ${theme.config.layout.site_title_size ?: 'small'}"
+>
+  <div
+    class="mx-auto flex h-full w-full max-w-7xl justify-between px-4 lg:px-6"
+  >
+    <div class="flex h-full items-center gap-6">
+      <div class="mr-2 h-full">
+        <a href="/" class="inline-flex h-full items-center">
+          <img
+            th:if="${(theme.config.layout.logo_type ?: 'image') == 'image'} and ${not #strings.isEmpty(site.logo)}"
+            th:src="${site.logo}"
+            th:alt="Logo"
+            decoding="async"
+            class="h-full w-auto"
+          />
+          <span
+            th:if="${(theme.config.layout.logo_type ?: 'image') == 'text'} or ${#strings.isEmpty(site.logo)}"
+            id="site-title"
+            class="font-bold tracking-tight text-gray-900 dark:text-slate-100"
+            th:classappend="${siteTitleSize == 'large' ? ' text-2xl' : (siteTitleSize == 'medium' ? ' text-xl' : ' text-lg')}"
+            th:text="${site.title}"></span>
+        </a>
+      </div>
+
+      <ul
+        th:if="${menu != null} and ${not #lists.isEmpty(menu.menuItems)}"
+        class="hidden items-center gap-1 md:flex"
+      >
+        <li
+          th:each="menuItem : ${menu.menuItems}"
+          class="relative cursor-pointer text-base font-bold transition-all"
+          x-data="dropdown"
+          @mouseenter="openByHover()"
+          @mouseleave="closeByHover()"
+        >
+          <a
+            class="inline-flex h-11 items-center gap-1 rounded-lg px-5 text-gray-600 transition-all hover:bg-gray-100 hover:text-blue-600 active:scale-95 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white"
+            th:href="@{${menuItem.status.href}}"
+            th:target="${menuItem.spec.target?.value}"
+            th:rel="${menuItem.spec.target?.value == '_blank' ? 'noopener noreferrer' : null}"
+          >
+            <span th:text="${menuItem.status.displayName}"></span>
+            <span
+              th:if="${menuItem.spec.target?.value == '_blank'}"
+              class="icon-[tabler--external-link] text-base text-gray-400 dark:text-slate-500"
+            ></span>
+          </a>
+          <ul
+            th:if="${not #lists.isEmpty(menuItem.children)}"
+            @mouseenter="openByHover()"
+            @mouseleave="closeByHover()"
+            x-show="show"
+            x-cloak
+            x-transition:enter="transition ease-out duration-100"
+            x-transition:enter-start="transform opacity-0 scale-95"
+            x-transition:enter-end="transform opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-75"
+            x-transition:leave-start="transform opacity-100 scale-100"
+            x-transition:leave-end="transform opacity-0 scale-95"
+            class="absolute left-0 top-full z-10 mt-2 w-40 overflow-hidden rounded-xl border border-gray-100 bg-white p-2 shadow-lg dark:border-slate-700 dark:bg-slate-800"
+          >
+            <li th:each="childMenuItem : ${menuItem.children}">
+              <a
+                class="block rounded-lg px-4 py-2 text-base font-bold text-gray-600 transition-all hover:bg-gray-50 hover:text-blue-600 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white"
+                th:href="@{${childMenuItem.status.href}}"
+                th:text="${childMenuItem.status.displayName}"
+                th:target="${childMenuItem.spec.target?.value}"
+                th:rel="${childMenuItem.spec.target?.value == '_blank' ? 'noopener noreferrer' : null}"
+              ></a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex items-center">
+      <ul class="flex items-center gap-1.5">
+        <li
+          th:if="${menu != null} and ${not #lists.isEmpty(menu.menuItems)}"
+          x-data="dropdown"
+          class="relative cursor-pointer transition-all md:hidden"
+          @click.outside="show = false"
+          @keydown.escape.window="show = false"
+        >
+          <button
+            type="button"
+            class="inline-flex size-11 items-center justify-center rounded-lg text-gray-600 transition-all hover:bg-gray-100 hover:text-blue-600 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white"
+            th:aria-label="#{fragment.header.menu}"
+            aria-haspopup="menu"
+            :aria-expanded="show.toString()"
+            @click="if (!window.matchMedia('(min-width: 768px)').matches) toggle()"
+          >
+            <span class="icon-[tabler--menu-2] text-xl"></span>
+          </button>
+          <ul
+            x-show="show"
+            x-cloak
+            x-transition:enter="transition ease-out duration-100"
+            x-transition:enter-start="transform opacity-0 scale-95"
+            x-transition:enter-end="transform opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-75"
+            x-transition:leave-start="transform opacity-100 scale-100"
+            x-transition:leave-end="transform opacity-0 scale-95"
+            class="fixed inset-x-4 top-[4.5rem] z-20 mt-2 max-h-[calc(100vh-5.5rem)] overflow-y-auto rounded-xl border border-gray-100 bg-white p-2 shadow-lg dark:border-slate-700 dark:bg-slate-800"
+          >
+            <li th:each="menuItem : ${menu.menuItems}">
+              <a
+                class="group flex min-w-0 items-center justify-between gap-8 rounded-lg px-3 py-2.5 text-base font-bold text-gray-600 transition-all hover:bg-gray-50 hover:text-blue-600 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white"
+                th:href="@{${menuItem.status.href}}"
+                th:target="${menuItem.spec.target?.value}"
+                th:rel="${menuItem.spec.target?.value == '_blank' ? 'noopener noreferrer' : null}"
+              >
+                <span
+                  class="min-w-0 truncate"
+                  th:text="${menuItem.status.displayName}"></span>
+                <span
+                  th:if="${menuItem.spec.target?.value == '_blank'}"
+                  class="icon-[tabler--external-link] text-base text-gray-400 transition-all group-hover:text-blue-500 dark:text-slate-500"
+                ></span>
+                <span
+                  th:unless="${menuItem.spec.target?.value == '_blank'}"
+                  class="icon-[tabler--chevron-right] text-base text-gray-400 transition-all group-hover:translate-x-0.5 group-hover:text-blue-500 dark:text-slate-500"
+                ></span>
+              </a>
+              <ul
+                th:if="${not #lists.isEmpty(menuItem.children)}"
+                class="my-1 ml-3 border-l border-gray-100 pl-2 dark:border-slate-700"
+              >
+                <li th:each="childMenuItem : ${menuItem.children}">
+                  <a
+                    class="block truncate rounded-lg px-3 py-2 text-base font-bold text-gray-500 transition-all hover:bg-gray-50 hover:text-blue-600 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
+                    th:href="@{${childMenuItem.status.href}}"
+                    th:text="${childMenuItem.status.displayName}"
+                    th:target="${childMenuItem.spec.target?.value}"
+                    th:rel="${childMenuItem.spec.target?.value == '_blank' ? 'noopener noreferrer' : null}"
+                  ></a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+        <li
+          x-data="colorSchemeSwitcher"
+          th:if="${theme.config.style.color_scheme_settings?.enable_change_color_scheme}"
+          class="relative cursor-pointer transition-all"
+          @mouseenter="openColorSchemePicker()"
+          @mouseleave="closeColorSchemePicker()"
+          @click.outside="showColorSchemePicker = false"
+        >
+          <button
+            type="button"
+            class="inline-flex size-11 items-center justify-center rounded-lg text-gray-600 transition-all hover:bg-gray-100 hover:text-blue-600 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white"
+            :aria-label="colorScheme.label"
+            aria-haspopup="true"
+            :aria-expanded="showColorSchemePicker.toString()"
+            @click="handleColorSchemeTriggerClick($event)"
+          >
+            <span class="text-xl" :class="colorScheme.icon"></span>
+          </button>
+          <ul
+            @mouseenter="openColorSchemePicker()"
+            @mouseleave="closeColorSchemePicker()"
+            x-show="showColorSchemePicker"
+            x-cloak
+            x-transition:enter="transition ease-out duration-100"
+            x-transition:enter-start="transform opacity-0 scale-95"
+            x-transition:enter-end="transform opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-75"
+            x-transition:leave-start="transform opacity-100 scale-100"
+            x-transition:leave-end="transform opacity-0 scale-95"
+            class="absolute right-0 top-full z-10 mt-2 hidden w-40 origin-top overflow-hidden rounded-xl border border-gray-100 bg-white p-2 shadow-lg shadow-slate-900/10 dark:border-slate-700 dark:bg-slate-800 sm:left-[calc(50%-5rem)] sm:right-auto sm:block"
+          >
+            <template
+              x-for="colorScheme in colorSchemes"
+              :key="colorScheme.value"
+            >
+              <li
+                class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-base font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-blue-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-white"
+                @click="selectColorScheme(colorScheme.value, $event)"
+              >
+                <span :class="colorScheme.icon"></span>
+                <span x-text="colorScheme.label"></span>
+              </li>
+            </template>
+          </ul>
+        </li>
+
+        <!-- https://github.com/halo-sigs/plugin-search-widget -->
+        <li th:if="${pluginFinder.available('PluginSearchWidget')}">
+          <button
+            type="button"
+            th:title="#{fragment.header.search}"
+            onclick="SearchWidget.open()"
+            class="inline-flex size-11 items-center justify-center rounded-lg text-gray-600 transition-all hover:bg-gray-100 hover:text-blue-600 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white"
+          >
+            <span class="icon-[tabler--search] text-xl"></span>
+          </button>
+        </li>
+
+        <li
+          x-data="dropdown"
+          class="relative cursor-pointer transition-all md:mr-9 2xl:mr-0"
+          th:with="currentUser = ${contributorFinder.getContributor(#authentication.name)}"
+          @mouseenter="openByHover()"
+          @mouseleave="closeByHover()"
+          @click.outside="show = false"
+        >
+          <div>
+            <button
+              type="button"
+              class="inline-flex size-11 items-center justify-center rounded-lg text-gray-600 transition-all hover:bg-gray-100 hover:text-blue-600 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white"
+              aria-haspopup="menu"
+              :aria-expanded="show.toString()"
+              @click.stop="toggle()"
+            >
+              <img
+                class="size-5 rounded-full object-cover"
+                th:src="${currentUser.avatar ?: #theme.assets('/images/default-avatar.svg')}"
+                th:alt="${currentUser.displayName}"
+                loading="lazy"
+                decoding="async"
+              />
+            </button>
+            <ul
+              @mouseenter="openByHover()"
+              @mouseleave="closeByHover()"
+              x-show="show"
+              x-cloak
+              x-transition:enter="transition ease-out duration-100"
+              x-transition:enter-start="transform opacity-0 scale-95"
+              x-transition:enter-end="transform opacity-100 scale-100"
+              x-transition:leave="transition ease-in duration-75"
+              x-transition:leave-start="transform opacity-100 scale-100"
+              x-transition:leave-end="transform opacity-0 scale-95"
+              class="absolute right-0 top-full z-10 mt-2 w-40 origin-top overflow-hidden rounded-xl border border-gray-100 bg-white p-2 shadow-lg shadow-slate-900/10 dark:border-slate-700 dark:bg-slate-800 sm:left-[calc(50%-5rem)] sm:right-auto"
+            >
+              <li
+                sec:authorize="isAuthenticated()"
+                class="flex w-full items-center text-left text-base font-medium"
+              >
+                <a
+                  class="size-full truncate rounded-lg px-3 py-2 text-gray-600 transition-all hover:bg-gray-50 hover:text-blue-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-white"
+                  href="/console"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  th:text="#{fragment.header.console}"
+                >
+                </a>
+              </li>
+              <li
+                sec:authorize="isAuthenticated()"
+                class="flex w-full items-center text-left text-base font-medium"
+              >
+                <a
+                  class="size-full truncate rounded-lg px-3 py-2 text-gray-600 transition-all hover:bg-gray-50 hover:text-blue-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-white"
+                  href="/logout"
+                  th:text="#{fragment.header.logout}"
+                >
+                </a>
+              </li>
+              <li
+                sec:authorize="isAnonymous()"
+                class="flex w-full items-center text-left text-base font-medium"
+              >
+                <a
+                  class="size-full truncate rounded-lg px-3 py-2 text-gray-600 transition-all hover:bg-gray-50 hover:text-blue-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-white"
+                  href="/login"
+                  onclick="window.location.assign('/login?redirect_uri=' + encodeURIComponent(window.location.href)); return false"
+                  th:text="#{fragment.header.login}"
+                >
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

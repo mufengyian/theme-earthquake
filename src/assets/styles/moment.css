@@ -1,0 +1,67 @@
+@reference "./tailwind.css";
+
+.moment-content {
+  .tag {
+    &::before {
+      content: "#";
+    }
+    @apply rounded bg-gray-100 px-1 py-0.5 text-sm text-gray-900 hover:bg-gray-200 dark:bg-slate-600 dark:text-slate-50 dark:hover:bg-slate-700 dark:hover:text-slate-100;
+  }
+}
+
+.moment-media {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  max-width: min(100%, 36rem);
+}
+
+.moment-media-item {
+  position: relative;
+  grid-column: span 2 / span 2;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.moment-media-count-1 {
+  max-width: min(100%, 26rem);
+}
+
+.moment-media-count-1 .moment-media-item {
+  grid-column: 1 / -1;
+  aspect-ratio: 4 / 5;
+}
+
+.moment-media-count-2 .moment-media-item,
+.moment-media-count-4 .moment-media-item,
+.moment-media-count-5 .moment-media-item-wide {
+  grid-column: span 3 / span 3;
+  aspect-ratio: 4 / 3;
+}
+
+.moment-media-audio,
+.moment-media-post {
+  grid-column: 1 / -1;
+  aspect-ratio: auto;
+}
+
+.moment-media-post {
+  display: flex;
+  min-height: 4.25rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .moment-media {
+    max-width: 100%;
+  }
+
+  .moment-media-item {
+    grid-column: span 3 / span 3;
+  }
+
+  .moment-media-count-1 .moment-media-item {
+    grid-column: 1 / -1;
+  }
+}

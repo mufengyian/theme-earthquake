@@ -1,0 +1,503 @@
+apiVersion: v1alpha1
+kind: Setting
+metadata:
+  name: theme-earthquake-setting
+spec:
+  forms:
+    - group: layout
+      label: 布局
+      formSchema:
+        - $formkit: select
+          name: site_title_size
+          label: 站点标题字号
+          value: small
+          options:
+            - label: 小
+              value: small
+            - label: 中
+              value: medium
+            - label: 大
+              value: large
+        - $formkit: select
+          name: post_list_layout
+          label: 文章列表布局
+          value: single
+          options:
+            - label: 单条
+              value: single
+            - label: 网格（一行两列）
+              value: grid_2
+            - label: 网格（一行三列）
+              value: grid_3
+          help: "选择单条时，文章卡片的图片将位于左侧"
+        - $formkit: group
+          name: post_card_display
+          label: 文章卡片显示设置
+          help: 勾选需要在文章卡片中显示的信息。
+          value:
+            categories: true
+            tags: true
+            excerpt: true
+            publish_time: true
+            pin: true
+          attrs:
+            style: "display:flex;flex-wrap:wrap;gap:8px 16px;"
+          children:
+            - $formkit: checkbox
+              name: categories
+              label: 分类
+              value: true
+            - $formkit: checkbox
+              name: tags
+              label: 标签
+              value: true
+            - $formkit: checkbox
+              name: excerpt
+              label: 摘要
+              value: true
+            - $formkit: checkbox
+              name: publish_time
+              label: 发布时间
+              value: true
+            - $formkit: checkbox
+              name: pin
+              label: 置顶图标
+              value: true
+        - $formkit: select
+          name: logo_type
+          id: logo_type
+          label: 菜单栏 Logo 类型
+          value: image
+          options:
+            - label: 文字
+              value: text
+            - label: 图片
+              value: image
+        - $formkit: checkbox
+          name: show_scroll_button
+          label: 显示滚动到顶部按钮
+          value: true
+        - $formkit: checkbox
+          name: enable_glass_navbar
+          id: enable_glass_navbar
+          label: 毛玻璃导航栏
+          value: false
+        - $formkit: text
+          if: $get(enable_glass_navbar).value
+          name: glass_navbar_opacity
+          label: 毛玻璃透明度
+          value: "0.72"
+          help: "填写 0 到 1，数值越小越透明。"
+        - $formkit: text
+          if: $get(enable_glass_navbar).value
+          name: glass_navbar_blur
+          label: 毛玻璃模糊强度
+          value: "0.75"
+          help: "填写 0 到 1，数值越大越模糊。"
+
+    - group: style
+      label: 样式
+      formSchema:
+        - $formkit: select
+          name: font_family
+          label: 字体
+          value: system
+          options:
+            - label: 系统默认
+              value: system
+            - label: Roboto
+              value: roboto
+            - label: JetBrains Mono
+              value: jetbrains_mono
+            - label: MiSans
+              value: misans
+            - label: 落霞孤鹜文楷
+              value: lxgw_wenkai
+
+        - $formkit: select
+          name: style_preset
+          label: 主题样式
+          value: earthquake
+          options:
+            - label: Earthquake
+              value: earthquake
+            - label: Light
+              value: light
+            - label: Cupcake
+              value: cupcake
+            - label: Bumblebee
+              value: bumblebee
+            - label: Emerald
+              value: emerald
+            - label: Corporate
+              value: corporate
+            - label: Retro
+              value: retro
+            - label: Cyberpunk
+              value: cyberpunk
+            - label: Valentine
+              value: valentine
+            - label: Garden
+              value: garden
+            - label: Lofi
+              value: lofi
+            - label: Pastel
+              value: pastel
+            - label: Fantasy
+              value: fantasy
+            - label: Wireframe
+              value: wireframe
+            - label: CMYK
+              value: cmyk
+            - label: Autumn
+              value: autumn
+            - label: Acid
+              value: acid
+            - label: Lemonade
+              value: lemonade
+            - label: Winter
+              value: winter
+            - label: Nord
+              value: nord
+            - label: Dark
+              value: dark
+            - label: Synthwave
+              value: synthwave
+            - label: Halloween
+              value: halloween
+            - label: Forest
+              value: forest
+            - label: Aqua
+              value: aqua
+            - label: Black
+              value: black
+            - label: Luxury
+              value: luxury
+            - label: Dracula
+              value: dracula
+            - label: Business
+              value: business
+            - label: Night
+              value: night
+            - label: Coffee
+              value: coffee
+            - label: Dim
+              value: dim
+            - label: Sunset
+              value: sunset
+            - label: Abyss
+              value: abyss
+            - label: Silk
+              value: silk
+            - label: Caramellatte
+              value: caramellatte
+
+        - $formkit: group
+          name: color_scheme_settings
+          label: 配色设置
+          value:
+            color_scheme: system
+            enable_change_color_scheme: true
+            enable_color_scheme_animation: false
+          attrs:
+            style: "display:flex;flex-wrap:wrap;gap:8px 16px;align-items:flex-start;"
+          children:
+            - $formkit: select
+              name: color_scheme
+              label: 默认配色
+              value: system
+              options:
+                - label: 跟随系统
+                  value: system
+                - label: 深色
+                  value: dark
+                - label: 浅色
+                  value: light
+            - $formkit: checkbox
+              name: enable_change_color_scheme
+              id: enable_change_color_scheme
+              label: 允许访客切换配色
+              value: true
+            - $formkit: checkbox
+              name: enable_color_scheme_animation
+              label: 切换配色动画
+              value: false
+              help: 开启后切换配色时显示圆形扩散动画。
+
+    - group: post
+      label: 文章
+      formSchema:
+        - $formkit: select
+          name: title_position
+          label: 标题位置
+          value: "content"
+          options:
+            - value: "content"
+              label: "正文中"
+            - value: "cover"
+              label: "封面中"
+        - $formkit: text
+          name: cover_height
+          label: 封面图高度
+          value: "24rem"
+        - $formkit: select
+          name: toc_mode
+          label: 文章目录显示
+          value: both
+          options:
+            - label: 关闭
+              value: none
+            - label: 左侧
+              value: left
+            - label: 文内
+              value: inline
+            - label: 左侧 + 移动端文内
+              value: both
+        - $formkit: select
+          name: navigation_scope
+          label: 上一篇/下一篇范围
+          value: all
+          options:
+            - label: 全站文章
+              value: all
+            - label: 同主分类
+              value: category
+        - $formkit: group
+          name: post_display
+          id: post_display
+          label: 文章页显示设置
+          help: 勾选需要在文章页中显示的信息与操作。
+          value:
+            categories: true
+            tags: true
+            visit: true
+            publish_time: true
+            navigation: true
+            upvote: true
+            share: true
+          attrs:
+            style: "display:flex;flex-wrap:wrap;gap:8px 16px;"
+          children:
+            - $formkit: checkbox
+              name: categories
+              label: 分类
+              value: true
+            - $formkit: checkbox
+              name: tags
+              label: 标签
+              value: true
+            - $formkit: checkbox
+              name: visit
+              label: 浏览量
+              value: true
+            - $formkit: checkbox
+              name: publish_time
+              label: 发布时间
+              value: true
+            - $formkit: checkbox
+              name: navigation
+              label: 上一篇/下一篇
+              value: true
+            - $formkit: checkbox
+              name: upvote
+              label: 点赞按钮
+              value: true
+            - $formkit: checkbox
+              name: share
+              label: 分享按钮
+              value: true
+        - $formkit: checkbox
+          name: expand_inline_toc
+          label: 展开文内目录
+          value: false
+        - $formkit: select
+          if: "$get(post_display).value.share"
+          name: share_item_ids
+          key: share_item_ids
+          id: share_item_ids
+          multiple: true
+          sortable: true
+          label: 分享平台
+          value:
+            - wechat
+            - x
+            - telegram
+            - facebook
+            - qq
+            - qzone
+            - weibo
+            - douban
+            - native
+          options:
+            - label: 微信
+              value: wechat
+            - label: X
+              value: x
+            - label: Telegram
+              value: telegram
+            - label: Facebook
+              value: facebook
+            - label: QQ
+              value: qq
+            - label: QQ 空间
+              value: qzone
+            - label: 微博
+              value: weibo
+            - label: 豆瓣
+              value: douban
+            - label: 系统分享
+              value: native
+
+    - group: sidebar
+      label: 侧边栏
+      formSchema:
+        - $formkit: array
+          name: widgets
+          label: 小部件
+          value:
+            - value: popular-posts
+            - value: categories
+            - value: tags
+          itemLabels:
+            - type: "text"
+              label: "$value.value"
+          children:
+            - $formkit: select
+              name: value
+              id: value
+              key: value
+              label: 部件
+              options:
+                - label: 站点资料
+                  value: profile
+                - label: 热门文章
+                  value: popular-posts
+                - label: 文章分类
+                  value: categories
+                - label: 文章标签
+                  value: tags
+            - $formkit: group
+              if: "$value.value === profile"
+              name: options
+              key: profile-options
+              id: profile-options
+              label: 站点资料选项
+              children:
+                - $formkit: attachment
+                  name: logo
+                  label: 站点资料 Logo
+                - $formkit: array
+                  name: social_media
+                  label: 社交媒体
+                  value: []
+                  itemLabels:
+                    - type: "iconify"
+                      label: "$value.icon"
+                    - type: "text"
+                      label: "$value.name"
+                    - type: "text"
+                      label: "$value.url"
+                  children:
+                    - $formkit: iconify
+                      format: svg
+                      name: icon
+                      label: 图标
+                      validation: "required"
+                    - $formkit: text
+                      name: name
+                      label: 名称
+                    - $formkit: text
+                      name: url
+                      label: 链接
+                      validation: "required"
+                    - $formkit: select
+                      name: url_type
+                      label: 链接类型
+                      value: normal
+                      help: "如果选择了图片类型，那么在访客点击之后会使用弹框的形式加载"
+                      options:
+                        - label: 跳转链接
+                          value: normal
+                        - label: 图片
+                          value: image
+
+    - group: footer
+      label: 页脚
+      formSchema:
+        - $formkit: group
+          name: footer_display
+          label: 页脚内容
+          value:
+            show_footer_copyright: true
+            show_footer_powered_by: true
+            show_halo_footer: true
+          attrs:
+            style: "display:flex;flex-wrap:wrap;gap:8px 16px;"
+          children:
+            - $formkit: checkbox
+              name: show_footer_copyright
+              label: 版权信息
+              value: true
+            - $formkit: checkbox
+              name: show_footer_powered_by
+              label: Powered by
+              value: true
+            - $formkit: checkbox
+              name: show_halo_footer
+              label: Halo 页脚扩展
+              value: true
+        - $formkit: array
+          name: social_media
+          label: 社交媒体
+          value: []
+          itemLabels:
+            - type: "iconify"
+              label: "$value.iconify"
+            - type: "text"
+              label: "$value.name"
+            - type: "text"
+              label: "$value.url"
+          children:
+            - $formkit: iconify
+              name: iconify
+              label: 图标
+              format: svg
+              validation: "required"
+            - $formkit: text
+              name: name
+              label: 名称
+            - $formkit: text
+              name: url
+              label: 链接
+              validation: "required"
+            - $formkit: select
+              name: url_type
+              label: 链接类型
+              value: normal
+              help: "如果选择了图片类型，那么在访客点击之后会使用弹框的形式加载"
+              options:
+                - label: 跳转链接
+                  value: normal
+                - label: 图片
+                  value: image
+        - $formkit: group
+          name: beian
+          label: 备案信息
+          value:
+            show_beian: false
+            icp_text: ""
+            gongan_text: ""
+          children:
+            - $formkit: checkbox
+              name: show_beian
+              id: show_beian
+              label: 显示备案号
+              value: false
+            - $formkit: text
+              if: $get(show_beian).value
+              name: icp_text
+              label: ICP 备案号
+            - $formkit: text
+              if: $get(show_beian).value
+              name: gongan_text
+              label: 公安联网备案号
