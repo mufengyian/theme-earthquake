@@ -424,28 +424,50 @@ spec:
     - group: footer
       label: 页脚
       formSchema:
-        - $formkit: group
-          name: footer_display
+        - $formkit: array
+          name: footer_items
           label: 页脚内容
           value:
-            show_footer_copyright: true
-            show_footer_powered_by: true
-            show_halo_footer: true
-          attrs:
-            style: "display:flex;flex-wrap:wrap;gap:8px 16px;"
+            - value: copyright
+            - value: powered_by
+            - value: halo_footer
+          itemLabels:
+            - type: "text"
+              label: "$value.value"
           children:
-            - $formkit: checkbox
-              name: show_footer_copyright
-              label: 版权信息
-              value: true
-            - $formkit: checkbox
-              name: show_footer_powered_by
-              label: Powered by
-              value: true
-            - $formkit: checkbox
-              name: show_halo_footer
-              label: Halo 页脚扩展
-              value: true
+            - $formkit: select
+              name: value
+              key: footer_item_value
+              label: 内容
+              options:
+                - label: 版权信息
+                  value: copyright
+                - label: 架构信息
+                  value: powered_by
+                - label: Halo 页脚扩展
+                  value: halo_footer
+                - label: ICP 备案
+                  value: icp
+                - label: 公安联网备案
+                  value: gongan
+            - $formkit: group
+              if: "$value.value === 'icp'"
+              name: options
+              key: icp-options
+              label: ICP 备案设置
+              children:
+                - $formkit: text
+                  name: text
+                  label: ICP 备案号
+            - $formkit: group
+              if: "$value.value === 'gongan'"
+              name: options
+              key: gongan-options
+              label: 公安联网备案设置
+              children:
+                - $formkit: text
+                  name: text
+                  label: 公安联网备案号
         - $formkit: array
           name: social_media
           label: 社交媒体
@@ -480,24 +502,4 @@ spec:
                   value: normal
                 - label: 图片
                   value: image
-        - $formkit: group
-          name: beian
-          label: 备案信息
-          value:
-            show_beian: false
-            icp_text: ""
-            gongan_text: ""
-          children:
-            - $formkit: checkbox
-              name: show_beian
-              id: show_beian
-              label: 显示备案号
-              value: false
-            - $formkit: text
-              if: $get(show_beian).value
-              name: icp_text
-              label: ICP 备案号
-            - $formkit: text
-              if: $get(show_beian).value
-              name: gongan_text
-              label: 公安联网备案号
+
