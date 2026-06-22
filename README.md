@@ -4,6 +4,8 @@
 
 面向个人博客、图库、瞬间和链接页，不追求大而全。
 
+**预览：[风观墨迹](https://fg.ink)**
+
 ## 技术栈
 
 Astro + Tailwind CSS + Alpine.js
