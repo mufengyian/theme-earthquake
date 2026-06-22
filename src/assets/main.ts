@@ -58,19 +58,6 @@ const initScrollToTopButton = () => {
   });
 };
 
-const initPaginationSelects = () => {
-  document
-    .querySelectorAll<HTMLSelectElement>("[data-earthquake-pagination]")
-    .forEach((paginationSelect) => {
-      paginationSelect.addEventListener("change", (event) => {
-        const target = event.currentTarget as HTMLSelectElement;
-        if (target.value) {
-          window.location.assign(target.value);
-        }
-      });
-    });
-};
-
 const queueScrollUpdate = () => {
   if (scrollUpdateScheduled) {
     return;
@@ -88,7 +75,6 @@ const initPageInteractions = () => {
   headerMenu = document.getElementById("header-menu");
   scrollToTopButton = document.getElementById("btn-scroll-to-top");
   initScrollToTopButton();
-  initPaginationSelects();
   initImagePreview();
   generateToc("content", ".toc", ".toc-container");
   onScroll();

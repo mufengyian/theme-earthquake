@@ -1,41 +1,92 @@
 <div
   th:fragment="pagination(context,prevUrl,nextUrl,totalPages,page,hasPrevious,hasNext)"
+  th:if="${hasPrevious || hasNext}"
+  th:with="showFirst=${page > 3},
+           showStartEllipsis=${page > 4},
+           showLast=${page + 2 < totalPages},
+           showEndEllipsis=${page + 2 < totalPages - 1}"
 >
-  <div
-    class="mt-6 flex items-center justify-between"
-    th:if="${hasPrevious || hasNext}"
+  <nav
+    class="mt-6 flex items-center justify-center gap-1"
+    th:attr="data-context=${context}"
+    th:aria-label="|第${page}页，共${totalPages}页|"
   >
+    <!-- 上一页 -->
     <a
+      th:if="${hasPrevious}"
       th:href="@{${prevUrl}}"
-      class="whitespace-no-wrap group inline-flex items-center justify-center gap-1 rounded-md border border-gray-200 bg-white px-4 py-1 text-sm font-medium leading-6 text-gray-600 shadow-sm hover:bg-gray-50 focus:shadow-none focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white"
-      th:classappend="${!hasPrevious ? 'pointer-events-none opacity-60' : ''}"
+      class="inline-flex size-9 items-center justify-center rounded-lg text-gray-600 transition-all hover:bg-gray-100 hover:text-blue-600 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
+      th:aria-label="#{common.previousPage}"
     >
-      <span
-        class="icon-[tabler--arrow-left] text-lg transition-all group-hover:-translate-x-1"
-      ></span>
-      <span th:text="#{common.previousPage}"></span>
+      <span class="icon-[tabler--chevron-left] text-lg"></span>
     </a>
-    <select
-      data-earthquake-pagination
-      class="bg-transparent text-sm text-gray-900 outline-none dark:text-slate-50"
+    <span
+      th:unless="${hasPrevious}"
+      class="inline-flex size-9 cursor-default items-center justify-center rounded-lg text-gray-300 dark:text-slate-600"
     >
-      <option
-        th:each="i : ${#numbers.sequence(1,totalPages)}"
-        th:selected="${i == page}"
-        th:value="|${context}page/${i}|"
-        th:text="|${i} / ${totalPages}|"
-        class="bg-white text-gray-900 dark:bg-slate-700 dark:text-slate-50"
-      ></option>
-    </select>
+      <span class="icon-[tabler--chevron-left] text-lg"></span>
+    </span>
+
+    <!-- 首页 -->
+    <button
+      th:if="${showFirst}"
+      type="button"
+      onclick="earthquakePaginationGo(this)"
+      data-page="1"
+      class="inline-flex size-9 items-center justify-center rounded-lg text-sm font-medium text-gray-600 transition-all hover:bg-gray-100 hover:text-blue-600 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
+    >1</button>
+    <span th:if="${showStartEllipsis}" class="inline-flex size-9 items-center justify-center text-sm text-gray-400 dark:text-slate-500">…</span>
+
+    <!-- 中间页码窗口 (page-2 到 page+2) -->
+    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+      <th:block th:with="tp=${page + (i - 3)}">
+        <button
+          th:if="${tp >= 1 and tp <= totalPages and not (showFirst and tp == 1) and not (showLast and tp == totalPages)}"
+          type="button"
+          th:disabled="${tp == page}"
+          onclick="earthquakePaginationGo(this)"
+          th:attr="data-page=${tp}"
+          th:text="${tp}"
+          th:class="${tp == page}
+            ? 'inline-flex size-9 items-center justify-center rounded-lg bg-blue-600 text-sm font-semibold text-white dark:bg-blue-500 cursor-default'
+            : 'inline-flex size-9 items-center justify-center rounded-lg text-sm font-medium text-gray-600 transition-all hover:bg-gray-100 hover:text-blue-600 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white'"
+        ></button>
+      </th:block>
+    </th:block>
+
+    <!-- 尾页 -->
+    <span th:if="${showEndEllipsis}" class="inline-flex size-9 items-center justify-center text-sm text-gray-400 dark:text-slate-500">…</span>
+    <button
+      th:if="${showLast}"
+      type="button"
+      onclick="earthquakePaginationGo(this)"
+      th:attr="data-page=${totalPages}"
+      th:text="${totalPages}"
+      class="inline-flex size-9 items-center justify-center rounded-lg text-sm font-medium text-gray-600 transition-all hover:bg-gray-100 hover:text-blue-600 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
+    ></button>
+
+    <!-- 下一页 -->
     <a
+      th:if="${hasNext}"
       th:href="@{${nextUrl}}"
-      class="whitespace-no-wrap group inline-flex items-center justify-center gap-1 rounded-md border border-gray-200 bg-white px-4 py-1 text-sm font-medium leading-6 text-gray-600 shadow-sm hover:bg-gray-50 focus:shadow-none focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white"
-      th:classappend="${!hasNext ? 'pointer-events-none opacity-60' : ''}"
+      class="inline-flex size-9 items-center justify-center rounded-lg text-gray-600 transition-all hover:bg-gray-100 hover:text-blue-600 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
+      th:aria-label="#{common.nextPage}"
     >
-      <span th:text="#{common.nextPage}"></span>
-      <span
-        class="icon-[tabler--arrow-right] text-lg transition-all group-hover:translate-x-1"
-      ></span>
+      <span class="icon-[tabler--chevron-right] text-lg"></span>
     </a>
-  </div>
+    <span
+      th:unless="${hasNext}"
+      class="inline-flex size-9 cursor-default items-center justify-center rounded-lg text-gray-300 dark:text-slate-600"
+    >
+      <span class="icon-[tabler--chevron-right] text-lg"></span>
+    </span>
+  </nav>
+
+  <script>
+    function earthquakePaginationGo(el) {
+      const page = el.dataset.page;
+      const context = el.closest('[data-context]').dataset.context;
+      window.location.href = context + 'page/' + page;
+    }
+  </script>
 </div>
