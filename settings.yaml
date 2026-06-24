@@ -354,6 +354,10 @@ spec:
     - group: sidebar
       label: 侧边栏
       formSchema:
+        - $formkit: checkbox
+          name: show_on_page
+          label: 页面显示侧边栏
+          value: false
         - $formkit: array
           name: widgets
           label: 小部件

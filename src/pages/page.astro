@@ -10,10 +10,11 @@ import Layout from "../layouts/Layout.astro";
   <section
     id="app"
     class="main detail-sidebar-layout mx-auto flex max-w-7xl flex-col px-4 lg:flex-row"
-    th:with="titleOnCover = ${(theme.config.post.title_position ?: 'content') == 'cover' and not #strings.isEmpty(singlePage.spec.cover)}, postDisplay = ${theme.config.post.post_display}"
+    th:with="titleOnCover = ${(theme.config.post.title_position ?: 'content') == 'cover' and not #strings.isEmpty(singlePage.spec.cover)}, postDisplay = ${theme.config.post.post_display}, showSidebar = ${theme.config.sidebar?.show_on_page ?: false}"
   >
     <div
-      class="content-wrapper post-detail animated fadeIn min-w-0 pt-12 lg:w-3/4 lg:px-8 lg:pb-8 lg:pt-16"
+      class="content-wrapper post-detail animated fadeIn min-w-0 pt-12 lg:px-8 lg:pb-8 lg:pt-16"
+      th:classappend="${showSidebar ? ' lg:w-3/4' : ' lg:w-full lg:max-w-4xl lg:mx-auto'}"
       th:attr="data-singlepage-name=${singlePage.metadata.name}, data-share-ids=${theme.config.post.share_item_ids != null ? #strings.listJoin(theme.config.post.share_item_ids, ',') : ''}"
       x-data="Object.assign(upvote('singlepage','content.halo.run','singlepages'), share($el.dataset.shareIds ? $el.dataset.shareIds.split(',') : []), { name: $el.dataset.singlepageName })"
     >
@@ -159,7 +160,7 @@ import Layout from "../layouts/Layout.astro";
       </div>
     </div>
 
-    <th:block th:replace="~{modules/sidebar :: sidebar(prepend = null)}"
+    <th:block th:if="${showSidebar}" th:replace="~{modules/sidebar :: sidebar(prepend = null)}"
     ></th:block>
   </section>
 </Layout>
