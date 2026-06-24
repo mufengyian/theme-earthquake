@@ -127,13 +127,18 @@ const setActiveHeading = (id: string, tocLinks?: HTMLAnchorElement[]) => {
   const links =
     tocLinks ??
     Array.from(document.querySelectorAll<HTMLAnchorElement>(".toc-link"));
+  const isTouch = window.matchMedia("(hover: none)").matches;
   links.forEach((link) => {
     const active = link.hash === `#${id}`;
     link.classList.toggle("is-active-link", active);
     link.setAttribute("aria-current", active ? "true" : "false");
 
     if (active) {
-      link.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      // Only auto-scroll the TOC link into view on desktop.
+      // On mobile this scrollIntoView fights with page scroll causing jitter.
+      if (!isTouch) {
+        link.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
     }
   });
 };
