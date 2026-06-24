@@ -433,6 +433,60 @@ spec:
                           value: normal
                         - label: 图片
                           value: image
+            - $formkit: group
+              if: "$value.value === 'popular-posts'"
+              name: options
+              key: popular-posts-options
+              id: popular-posts-options
+              label: 热门文章选项
+              children:
+                - $formkit: number
+                  name: post_count
+                  label: 显示文章数
+                  value: 5
+                  min: 3
+                  max: 10
+                  step: 1
+                  help: "填写 3 到 10，默认 5 篇"
+            - $formkit: group
+              if: "$value.value === 'tags'"
+              name: options
+              key: tags-options
+              id: tags-options
+              label: 标签选项
+              children:
+                - $formkit: checkbox
+                  name: show_unused_tags
+                  label: 显示零使用的标签
+                  value: false
+                  help: "关闭后，未被使用过的标签不会显示出来"
+            - $formkit: group
+              if: "$value.value === 'popular-posts'"
+              name: options
+              key: popular-posts-options
+              id: popular-posts-options
+              label: 热门文章选项
+              children:
+                - $formkit: number
+                  name: post_count
+                  label: 显示文章数
+                  value: 5
+                  min: 3
+                  max: 10
+                  step: 1
+                  help: "填写 3 到 10，默认 5 篇"
+            - $formkit: group
+              if: "$value.value === 'tags'"
+              name: options
+              key: tags-options
+              id: tags-options
+              label: 标签选项
+              children:
+                - $formkit: checkbox
+                  name: show_unused_tags
+                  label: 显示零使用的标签
+                  value: false
+                  help: "关闭后，未被使用过的标签不会显示出来"
 
     - group: footer
       label: 页脚

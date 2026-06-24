@@ -9,7 +9,7 @@
   </h2>
   <ol
     class="space-y-3"
-    th:with="posts = ${postFinder.list({page: 1,size: 10,sort: {'stats.visit,desc'}})}"
+    th:with="posts = ${postFinder.list({page: 1,size: options.post_count,sort: {'stats.visit,desc'}})}"
   >
     <li th:each="post,postStat : ${posts}" class="group flex gap-3">
       <span

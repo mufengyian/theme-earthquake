@@ -15,9 +15,10 @@
     >
     </a>
   </div>
-  <div class="flex flex-wrap gap-2" th:with="tags = ${tagFinder.list(1,50)}">
+  <div class="flex flex-wrap gap-2" th:with="tags = ${tagFinder.list(1,50)}, showUnused = ${options.show_unused_tags}">
     <a
       th:each="tag : ${tags}"
+      th:if="${showUnused or tag.postCount > 0}"
       th:href="@{${tag.status.permalink}}"
       th:title="${tag.spec.displayName}"
       class="inline-flex items-center gap-1 rounded-full border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-600 transition hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700 dark:border-slate-700 dark:text-slate-300 dark:hover:border-purple-400/50 dark:hover:bg-purple-500/10 dark:hover:text-purple-200"
