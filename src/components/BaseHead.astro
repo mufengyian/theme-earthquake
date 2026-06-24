@@ -16,7 +16,7 @@
 <meta property="og:title" th:content="${post?.spec?.title ?: page?.spec?.title ?: site.title}" />
 <meta
   property="og:description"
-  th:content="${post?.spec?.excerpt ?: page?.spec?.excerpt ?: site.subtitle ?: ''}"
+  th:content="${post?.status?.excerpt ?: page?.spec?.excerpt ?: site.subtitle ?: ''}"
 />
 <meta
   property="og:image"
@@ -48,7 +48,7 @@
 <meta name="twitter:title" th:content="${post?.spec?.title ?: page?.spec?.title ?: site.title}" />
 <meta
   name="twitter:description"
-  th:content="${post?.spec?.excerpt ?: page?.spec?.excerpt ?: site.subtitle ?: ''}"
+  th:content="${post?.status?.excerpt ?: page?.spec?.excerpt ?: site.subtitle ?: ''}"
 />
 <meta
   name="twitter:image"
@@ -59,13 +59,18 @@
 </th:block>
 
 <!-- SEO: Canonical URL (theme.config.seo.enable_canonical) -->
+<th:block th:if="${theme.config.seo?.enable_canonical}">
 <link
-  th:if="${theme.config.seo?.enable_canonical}"
+  th:if="${post != null and post.status?.permalink != null}"
   rel="canonical"
-  th:with="permalink = ${post?.status?.permalink ?: page?.status?.permalink}"
-  th:unless="${permalink == null}"
-  th:href="|${site.url}${permalink}|"
+  th:href="|${site.url}${post.status.permalink}|"
 />
+<link
+  th:if="${post == null and page != null and page.status?.permalink != null}"
+  rel="canonical"
+  th:href="|${site.url}${page.status.permalink}|"
+/>
+</th:block>
 
 <!-- SEO: JSON-LD Structured Data (theme.config.seo.enable_json_ld) -->
 <th:block th:if="${theme.config.seo?.enable_json_ld and post != null}">
@@ -97,7 +102,7 @@
     "@id": [[${site.url + post.status.permalink}]]
   },
   "image": [[${post.spec.cover != null ? site.url + post.spec.cover : null}]],
-  "description": [[${post.spec.excerpt ?: ''}]]
+  "description": [[${post.status?.excerpt ?: ''}]]
 }
 </script>
 </th:block>
