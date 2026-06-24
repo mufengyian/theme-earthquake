@@ -1,3 +1,5 @@
+import { rafThrottle } from "./raf";
+
 type TocHeading = {
   id: string;
   level: number;
@@ -144,15 +146,12 @@ const setActiveHeading = (id: string, tocLinks?: HTMLAnchorElement[]) => {
 };
 
 const createActiveHeadingUpdater = (headings: HTMLHeadingElement[]) => {
-  let updateScheduled = false;
   // 缓存所有 TOC 链接，避免每次滚动都 querySelectorAll
   const tocLinks = Array.from(
     document.querySelectorAll<HTMLAnchorElement>(".toc-link"),
   );
 
   const update = () => {
-    updateScheduled = false;
-
     const activeHeading =
       [...headings].reverse().find(
         (heading) => heading.getBoundingClientRect().top <= 120,
@@ -163,22 +162,15 @@ const createActiveHeadingUpdater = (headings: HTMLHeadingElement[]) => {
     }
   };
 
-  const scheduleUpdate = () => {
-    if (updateScheduled) {
-      return;
-    }
+  const throttledUpdate = rafThrottle(update);
 
-    updateScheduled = true;
-    window.requestAnimationFrame(update);
-  };
-
-  window.addEventListener("scroll", scheduleUpdate, { passive: true });
-  window.addEventListener("resize", scheduleUpdate, { passive: true });
-  scheduleUpdate();
+  window.addEventListener("scroll", throttledUpdate, { passive: true });
+  window.addEventListener("resize", throttledUpdate, { passive: true });
+  update();
 
   return () => {
-    window.removeEventListener("scroll", scheduleUpdate);
-    window.removeEventListener("resize", scheduleUpdate);
+    window.removeEventListener("scroll", throttledUpdate);
+    window.removeEventListener("resize", throttledUpdate);
   };
 };
 

@@ -1,4 +1,5 @@
 import { i18n } from "../utils/i18n";
+import { resolveDataAttribute } from "../utils/dataset";
 
 interface UpvoteState {
   upvotedNames: string[];
@@ -7,22 +8,6 @@ interface UpvoteState {
   handleUpvote(name?: string): void;
 }
 
-const resolveName = (state: UpvoteState, key: string, name?: string): string | undefined => {
-  if (name !== undefined && name !== "") {
-    return name;
-  }
-
-  const $el = (state as Record<string, unknown>).$el as HTMLElement | undefined;
-  if (!$el) {
-    return undefined;
-  }
-
-  return (
-    $el.dataset[`upvote${key.charAt(0).toUpperCase() + key.slice(1)}Name`] ||
-    $el.dataset[`${key}Name`]
-  );
-};
-
 export default (key: string, group: string, plural: string): UpvoteState => ({
   upvotedNames: [],
   init() {
@@ -30,29 +15,34 @@ export default (key: string, group: string, plural: string): UpvoteState => ({
       const storedNames = JSON.parse(
         localStorage.getItem(`halo.upvoted.${key}.names`) || "[]",
       );
-
       this.upvotedNames = Array.isArray(storedNames) ? storedNames : [];
     } catch {
       this.upvotedNames = [];
     }
   },
   upvoted(id?: string) {
-    const target = resolveName(this, key, id);
+    const target = resolveDataAttribute(
+      this as unknown as Record<string, unknown>,
+      [`upvote${key.charAt(0).toUpperCase() + key.slice(1)}Name`, `${key}Name`],
+      id,
+    );
     if (!target) {
       return false;
     }
     return this.upvotedNames.includes(target);
   },
   async handleUpvote(name?: string) {
-    const target = resolveName(this, key, name);
+    const target = resolveDataAttribute(
+      this as unknown as Record<string, unknown>,
+      [`upvote${key.charAt(0).toUpperCase() + key.slice(1)}Name`, `${key}Name`],
+      name,
+    );
     if (!target) {
       return;
     }
-
     if (this.upvoted(target)) {
       return;
     }
-
     const response = await fetch(
       "/apis/api.halo.run/v1alpha1/trackers/upvote",
       {
@@ -67,7 +57,6 @@ export default (key: string, group: string, plural: string): UpvoteState => ({
         }),
       },
     ).catch(() => undefined);
-
     if (!response?.ok) {
       const { showToast } = window as unknown as {
         showToast?: (msg: string, type?: "error") => void;
@@ -76,9 +65,7 @@ export default (key: string, group: string, plural: string): UpvoteState => ({
       showToast?.(msg, "error");
       return;
     }
-
     this.upvotedNames = [...this.upvotedNames, target];
-
     try {
       localStorage.setItem(
         `halo.upvoted.${key}.names`,
@@ -87,11 +74,9 @@ export default (key: string, group: string, plural: string): UpvoteState => ({
     } catch {
       // Ignore storage failures so the visible count can still update.
     }
-
     const upvoteNodes = Array.from(
       document.querySelectorAll<HTMLElement>(`[data-upvote-${key}-name]`),
     ).filter((node) => node.getAttribute(`data-upvote-${key}-name`) === target);
-
     upvoteNodes.forEach((node) => {
       const upvoteCount = Number.parseInt(node.textContent || "0", 10);
       node.textContent = String(

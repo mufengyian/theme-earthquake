@@ -78,7 +78,7 @@ body {
   /* Single hue variable drives the entire palette via OKLCH.
      Each preset below just overrides --hue; the 8 semantic tokens
      derive automatically so adding a new preset is one line. */
-  --hue: 220;
+  --hue: 263;
 
   --earthquake-bg:            oklch(0.98  0.005 var(--hue));
   --earthquake-surface:       oklch(1     0     0);
@@ -111,7 +111,7 @@ body.dark\:bg-slate-900 {
 
 /* Light presets — override --hue; light/dark tokens derive automatically */
 body.theme-preset-earthquake,
-body.theme-preset-light      { --hue: 220; }
+body.theme-preset-light      { --hue: 263; }
 body.theme-preset-corporate,
 body.theme-preset-business   { --hue: 215; }
 body.theme-preset-winter,

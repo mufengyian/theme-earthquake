@@ -14,8 +14,8 @@ import "./components/number-formatter";
 import { initImagePreview } from "./utils/image-preview";
 import { generateToc } from "./utils/toc";
 import { showToast } from "./utils/toast";
+import { rafThrottle } from "./utils/raf";
 
-let scrollUpdateScheduled = false;
 let headerMenu: HTMLElement | null = null;
 let scrollToTopButton: HTMLElement | null = null;
 let readingProgressBar: HTMLElement | null = null;
@@ -36,45 +36,36 @@ if (document.querySelector("[x-data]")) {
   Alpine.start();
 }
 
-const onScroll = () => {
+const handleScroll = () => {
   if (window.scrollY > 0) {
     headerMenu?.classList.add("menu-sticky");
   } else {
     headerMenu?.classList.remove("menu-sticky");
   }
+
+  if (scrollToTopButton) {
+    const visible = window.scrollY > 300;
+    scrollToTopButton.style.opacity = visible ? "1" : "0";
+    scrollToTopButton.style.pointerEvents = visible ? "auto" : "none";
+  }
+
+  if (readingProgressBar) {
+    const fill = readingProgressBar.querySelector('.reading-progress-fill') as HTMLElement;
+    if (fill) {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      
+      if (docHeight <= 0) {
+        fill.style.width = '0%';
+      } else {
+        const progress = Math.min(100, (scrollTop / docHeight) * 100);
+        fill.style.width = `${progress}%`;
+      }
+    }
+  }
 };
 
-const updateScrollToTopButton = () => {
-  if (!scrollToTopButton) {
-    return;
-  }
-
-  const visible = window.scrollY > 300;
-  scrollToTopButton.style.opacity = visible ? "1" : "0";
-  scrollToTopButton.style.pointerEvents = visible ? "auto" : "none";
-};
-
-const updateReadingProgressBar = () => {
-  if (!readingProgressBar) {
-    return;
-  }
-
-  const fill = readingProgressBar.querySelector('.reading-progress-fill') as HTMLElement;
-  if (!fill) {
-    return;
-  }
-
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  
-  if (docHeight <= 0) {
-    fill.style.width = '0%';
-    return;
-  }
-
-  const progress = Math.min(100, (scrollTop / docHeight) * 100);
-  fill.style.width = `${progress}%`;
-};
+const throttledScroll = rafThrottle(handleScroll);
 
 const initScrollToTopButton = () => {
   if (!scrollToTopButton) {
@@ -86,20 +77,6 @@ const initScrollToTopButton = () => {
   });
 };
 
-const queueScrollUpdate = () => {
-  if (scrollUpdateScheduled) {
-    return;
-  }
-
-  scrollUpdateScheduled = true;
-  window.requestAnimationFrame(() => {
-    scrollUpdateScheduled = false;
-    onScroll();
-    updateScrollToTopButton();
-    updateReadingProgressBar();
-  });
-};
-
 const initPageInteractions = () => {
   headerMenu = document.getElementById("header-menu");
   scrollToTopButton = document.getElementById("btn-scroll-to-top");
@@ -107,12 +84,10 @@ const initPageInteractions = () => {
   initScrollToTopButton();
   initImagePreview();
   generateToc("content", ".toc", ".toc-container");
-  onScroll();
-  updateScrollToTopButton();
-  updateReadingProgressBar();
+  handleScroll();
 };
 
-window.addEventListener("scroll", queueScrollUpdate, { passive: true });
+window.addEventListener("scroll", throttledScroll, { passive: true });
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initPageInteractions, {
