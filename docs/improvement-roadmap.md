@@ -49,17 +49,9 @@
 
 ## 二、架构与代码质量
 
-### A-1 代码注入设置（强烈推荐）
-- **状态**：用户想加统计代码/自定义 CSS 必须改源码
-- **实现**：settings.yaml 新增 `custom_code` 组，含 4 个 textarea：
-  - `head_html` — 注入到 `</head>` 前（统计代码、meta 标签）
-  - `footer_html` — 注入到 `</body>` 前（JS SDK）
-  - `custom_css` — 注入到 `<style>` 标签
-  - `custom_js` — 注入到 `<script>` 标签
-  - 在 Layout.astro / BaseHead.astro 用 `th:utext="${theme.config.custom_code?.head_html}"` 输出
-- **优先级**：🟠 P1
-- **工作量**：1 小时
-- **参考**：hydro-minim `settings.yaml`
+### A-1 ~~代码注入设置~~（不适用，Halo 自带）
+- **状态**：Halo Console 后台设置中已有代码注入功能（head/body），会自动将注入的代码插入页面，主题无需重复实现
+- **结论**：撤销主题内的 custom_code 组，直接用 Halo 后台 → 设置 → 代码注入
 
 ### A-2 Post-List 列表抽取为 fragment
 - **状态**：index/category/tag/author/categories/tags 6+ 个页面重复相同的 grid + post-card + 空状态 + 分页结构

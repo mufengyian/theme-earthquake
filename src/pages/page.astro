@@ -160,7 +160,8 @@ import Layout from "../layouts/Layout.astro";
       </div>
     </div>
 
-    <th:block th:if="${showSidebar}" th:replace="~{modules/sidebar :: sidebar(prepend = null)}"
-    ></th:block>
+    <th:block th:if="${showSidebar}">
+      <th:block th:replace="~{modules/sidebar :: sidebar(prepend = null)}"></th:block>
+    </th:block>
   </section>
 </Layout>
