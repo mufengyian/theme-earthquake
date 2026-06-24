@@ -84,7 +84,7 @@
       ></span>
       <span
         class="text-sm tabular-nums text-gray-600 dark:text-slate-300"
-        th:text="#{common.publishedOn(${#dates.format(post.spec.publishTime,'yyyy-MM-dd')})}"
+        th:text="#{common.publishedOn(${#temporals.format(post.spec.publishTime,'yyyy-MM-dd')})}"
       >
       </span>
     </div>

@@ -228,7 +228,7 @@ import Layout from "../layouts/Layout.astro";
                 </div>
                 <div
                   class="truncate font-medium text-gray-900 dark:text-slate-100"
-                  th:text="${#dates.format(photo.exif.dateTimeOriginal,'yyyy-MM-dd HH:mm')}"
+                  th:text="${#temporals.format(photo.exif.dateTimeOriginal,'yyyy-MM-dd HH:mm')}"
                 >
                 </div>
               </div>

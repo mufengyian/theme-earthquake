@@ -116,8 +116,11 @@ const renderTocList = (nodes: TocHeading[]) => {
   return list;
 };
 
-const setActiveHeading = (id: string) => {
-  document.querySelectorAll<HTMLAnchorElement>(".toc-link").forEach((link) => {
+const setActiveHeading = (id: string, tocLinks?: HTMLAnchorElement[]) => {
+  const links =
+    tocLinks ??
+    Array.from(document.querySelectorAll<HTMLAnchorElement>(".toc-link"));
+  links.forEach((link) => {
     const active = link.hash === `#${id}`;
     link.classList.toggle("is-active-link", active);
     link.setAttribute("aria-current", active ? "true" : "false");
@@ -130,17 +133,21 @@ const setActiveHeading = (id: string) => {
 
 const createActiveHeadingUpdater = (headings: HTMLHeadingElement[]) => {
   let updateScheduled = false;
+  // 缓存所有 TOC 链接，避免每次滚动都 querySelectorAll
+  const tocLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>(".toc-link"),
+  );
 
   const update = () => {
     updateScheduled = false;
 
     const activeHeading =
-      headings.findLast(
+      [...headings].reverse().find(
         (heading) => heading.getBoundingClientRect().top <= 120,
       ) ?? headings[0];
 
     if (activeHeading) {
-      setActiveHeading(activeHeading.id);
+      setActiveHeading(activeHeading.id, tocLinks);
     }
   };
 

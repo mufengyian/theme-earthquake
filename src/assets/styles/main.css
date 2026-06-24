@@ -217,17 +217,8 @@ body .markdown-body a {
 
 .menu-sticky {
   @apply drop-shadow-md;
-  /* backdrop-filter with fallback for low-end devices */
   -webkit-backdrop-filter: saturate(180%) blur(16px);
   backdrop-filter: saturate(180%) blur(16px);
-}
-
-/* Progressive enhancement: use stronger blur only when backdrop-filter is supported */
-@supports (backdrop-filter: blur(1px)) {
-  .menu-sticky {
-    -webkit-backdrop-filter: saturate(180%) blur(16px);
-    backdrop-filter: saturate(180%) blur(16px);
-  }
 }
 
 #header-menu.header-menu-glass {

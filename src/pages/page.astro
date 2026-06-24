@@ -98,7 +98,7 @@ import Layout from "../layouts/Layout.astro";
           th:if="${postDisplay.publish_time}"
           class="text-sm font-light text-gray-500 dark:text-slate-400"
           th:title="${singlePage.spec.publishTime}"
-          th:text="${#dates.format(singlePage.spec.publishTime,'yyyy-MM-dd')}"
+          th:text="${#temporals.format(singlePage.spec.publishTime,'yyyy-MM-dd')}"
         >
         </div>
       </div>

@@ -44,7 +44,7 @@ import Layout from "../layouts/Layout.astro";
                           <div class="col-span-3 col-start-11">
                             <p
                               class="truncate text-sm text-gray-600 dark:text-slate-100"
-                              th:text="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+                              th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
                             >
                             </p>
                           </div>

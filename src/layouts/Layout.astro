@@ -48,5 +48,13 @@ import Header from "../components/Header.astro";
         class="icon-[tabler--chevron-up] text-2xl text-gray-600 dark:text-slate-200"
       ></span>
     </button>
+
+    <!-- 自定义代码注入（body 部分） -->
+    <th:block th:if="${theme.config.custom_code?.body_html}">
+      <th:block th:utext="${theme.config.custom_code.body_html}" />
+    </th:block>
+    <th:block th:if="${theme.config.custom_code?.custom_js}">
+      <script th:utext="${theme.config.custom_code.custom_js}"></script>
+    </th:block>
   </body>
 </html>

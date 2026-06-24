@@ -3,6 +3,18 @@
   name="viewport"
   content="width=device-width, initial-scale=1, maximum-scale=2"
 />
+<meta
+  th:if="${theme.config.style.color_scheme_settings?.color_scheme != 'light'}"
+  name="theme-color"
+  media="(prefers-color-scheme: dark)"
+  th:content="${theme.config.style.style_preset == 'earthquake' ? '#0f172a' : '#1e293b'}"
+/>
+<meta
+  th:if="${theme.config.style.color_scheme_settings?.color_scheme != 'dark'}"
+  name="theme-color"
+  media="(prefers-color-scheme: light)"
+  content="#ffffff"
+/>
 <link
   th:unless="${#strings.isEmpty(site.logo)}"
   rel="preload"
@@ -36,9 +48,9 @@
   th:content="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
 />
 <meta
-  th:if="${post?.spec?.publishTime != null}"
+  th:if="${post?.status?.lastModifyTime != null and !#strings.equals(#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX'), #temporals.format(post.status.lastModifyTime, 'yyyy-MM-dd''T''HH:mm:ssXXX'))}"
   property="article:modified_time"
-  th:content="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
+  th:content="${#temporals.format(post.status.lastModifyTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
 />
 </th:block>
 
@@ -84,7 +96,7 @@
   "@type": "BlogPosting",
   "headline": [[${post.spec.title}]],
   "datePublished": [[${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}]],
-  "dateModified": [[${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}]],
+  "dateModified": [[${post.status?.lastModifyTime != null and !#strings.equals(#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX'), #temporals.format(post.status.lastModifyTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')) ? #temporals.format(post.status.lastModifyTime, 'yyyy-MM-dd''T''HH:mm:ssXXX') : #temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}]],
   "author": {
     "@type": "Person",
     "name": [[${site.title}]]
@@ -244,6 +256,13 @@
 
   initColorScheme(earthWindow.colorScheme, earthWindow.enableChangeColorScheme);
 </script>
+<!-- 自定义代码注入（head 部分） -->
+<th:block th:if="${theme.config.custom_code?.head_html}">
+  <th:block th:utext="${theme.config.custom_code.head_html}" />
+</th:block>
+<th:block th:if="${theme.config.custom_code?.custom_css}">
+  <style th:utext="${theme.config.custom_code.custom_css}"></style>
+</th:block>
 <noscript>
   <style>
     body {

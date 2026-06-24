@@ -542,3 +542,27 @@ spec:
           value: false
           help: "启用后输出 BlogPosting 类型的 JSON-LD 结构化数据。如果已安装「SEO 工具集」插件，建议关闭以避免重复。"
 
+    - group: custom_code
+      label: 自定义代码
+      formSchema:
+        - $formkit: code
+          name: head_html
+          label: Head 注入
+          language: html
+          help: "注入到 </head> 之前，适合统计代码、meta 标签等。"
+        - $formkit: code
+          name: body_html
+          label: Body 注入
+          language: html
+          help: "注入到 </body> 之前，适合 JS SDK、客服代码等。"
+        - $formkit: code
+          name: custom_css
+          label: 自定义 CSS
+          language: css
+          help: "注入到 <style> 标签，覆盖主题样式。"
+        - $formkit: code
+          name: custom_js
+          label: 自定义 JS
+          language: javascript
+          help: "注入到 <script> 标签，页面加载后执行。"
+

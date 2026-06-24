@@ -29,7 +29,10 @@ Alpine.data("upvote", upvote);
 Alpine.data("share", share);
 Alpine.data("uiPermission", uiPermission);
 
-Alpine.start();
+// 仅当页面存在 Alpine 组件时才启动，避免无交互页面浪费开销
+if (document.querySelector("[x-data]")) {
+  Alpine.start();
+}
 
 const onScroll = () => {
   if (window.scrollY > 0) {
