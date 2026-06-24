@@ -26,8 +26,18 @@
     <script src="./js/qrious.min.js"></script>
     <script>
       (function () {
-        const url =
+        var rawUrl =
           new URLSearchParams(window.location.search).get("url") || "";
+        var url = "";
+        try {
+          url = new URL(rawUrl).href;
+        } catch (e) {
+          try {
+            url = new URL(rawUrl, window.location.origin).href;
+          } catch (e2) {
+            return;
+          }
+        }
         new QRious({
           element: document.getElementById("canvas"),
           value: url,

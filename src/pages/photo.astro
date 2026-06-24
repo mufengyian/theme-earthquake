@@ -39,7 +39,12 @@ import Layout from "../layouts/Layout.astro";
             class="w-full cursor-zoom-in rounded-lg object-contain"
             th:src="${photo.spec.url}"
             th:alt="${photo.spec.displayName}"
-            th:attr="data-preview-src=${photo.spec.url},data-preview-width=${photo.exif != null and photo.exif.imageWidth != null ? photo.exif.imageWidth : 0},data-preview-height=${photo.exif != null and photo.exif.imageHeight != null ? photo.exif.imageHeight : 0}"
+            th:srcset="|${thumbnail.gen(photo.spec.url, 's')} 400w,
+                        ${thumbnail.gen(photo.spec.url, 'm')} 800w,
+                        ${thumbnail.gen(photo.spec.url, 'l')} 1200w,
+                        ${thumbnail.gen(photo.spec.url, 'xl')} 1600w|"
+            sizes="(max-width: 1600px) 100vw, 1600px"
+            th:attr="data-preview-src=${photo.spec.url}"
             decoding="async"
           />
         </div>

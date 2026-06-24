@@ -102,7 +102,7 @@ body.dark\:bg-slate-900 {
 }
 
 /* Light presets — override --hue; light/dark tokens derive automatically */
-body.theme-preset-earthquake { --hue: 220; }
+body.theme-preset-earthquake,
 body.theme-preset-light      { --hue: 220; }
 body.theme-preset-corporate,
 body.theme-preset-business   { --hue: 215; }

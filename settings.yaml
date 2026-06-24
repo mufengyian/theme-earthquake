@@ -87,17 +87,23 @@ spec:
           id: enable_glass_navbar
           label: 毛玻璃导航栏
           value: false
-        - $formkit: text
+        - $formkit: number
           if: $get(enable_glass_navbar).value
           name: glass_navbar_opacity
           label: 毛玻璃透明度
           value: "0.72"
+          min: "0"
+          max: "1"
+          step: "0.01"
           help: "填写 0 到 1，数值越小越透明。"
-        - $formkit: text
+        - $formkit: number
           if: $get(enable_glass_navbar).value
           name: glass_navbar_blur
           label: 毛玻璃模糊强度
           value: "0.75"
+          min: "0"
+          max: "1"
+          step: "0.01"
           help: "填写 0 到 1，数值越大越模糊。"
 
     - group: style
