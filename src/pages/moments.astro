@@ -148,7 +148,7 @@ import Layout from "../layouts/Layout.astro";
                     <i class="icon-[tabler--calendar] size-3"></i>
                     <span
                       class="ml-1"
-                      th:text="${#dates.format(moment.spec.releaseTime,'yyyy-MM-dd')}"
+                      th:text="${#temporals.format(moment.spec.releaseTime,'yyyy-MM-dd')}"
                     >
                     </span>
                   </div>

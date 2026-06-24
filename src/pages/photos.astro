@@ -111,7 +111,7 @@ import Layout from "../layouts/Layout.astro";
               <button
                 type="button"
                 class="photo-gallery-link block w-full cursor-zoom-in overflow-hidden rounded-lg border-0 bg-gray-100 p-0 text-left dark:bg-slate-700"
-                th:attr="data-preview-src=${photo.spec.url},data-preview-width=${photo.exif != null and photo.exif.imageWidth != null ? photo.exif.imageWidth : 0},data-preview-height=${photo.exif != null and photo.exif.imageHeight != null ? photo.exif.imageHeight : 0}"
+                th:attr="data-preview-src=${photo.spec.url}"
                 th:aria-label="${photo.spec.displayName}"
               >
                 <span
@@ -145,7 +145,7 @@ import Layout from "../layouts/Layout.astro";
                 <span
                   th:if="${photo.exif != null and photo.exif.dateTimeOriginal != null}"
                   class="photo-data-date hidden"
-                  th:text="${#dates.format(photo.exif.dateTimeOriginal,'yyyy-MM-dd HH:mm')}"
+                  th:text="${#temporals.format(photo.exif.dateTimeOriginal,'yyyy-MM-dd HH:mm')}"
                 >
                 </span>
                 <span

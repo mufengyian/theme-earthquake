@@ -6,9 +6,17 @@
 
 html {
   scroll-padding-top: 100px;
-  scroll-behavior: smooth;
   scrollbar-color: rgba(100, 116, 139, 0.55) transparent;
   scrollbar-width: thin;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Only enable smooth scroll on devices that handle it well (hover capable = desktop) */
+@media (hover: hover) and (pointer: fine) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 html.dark {
@@ -70,7 +78,7 @@ body {
   /* Single hue variable drives the entire palette via OKLCH.
      Each preset below just overrides --hue; the 8 semantic tokens
      derive automatically so adding a new preset is one line. */
-  --hue: 220;
+  --hue: 215;
 
   --earthquake-bg:            oklch(0.98  0.005 var(--hue));
   --earthquake-surface:       oklch(1     0     0);
@@ -102,20 +110,24 @@ body.dark\:bg-slate-900 {
 }
 
 /* Light presets — override --hue; light/dark tokens derive automatically */
-body.theme-preset-earthquake { --hue: 220; }
-body.theme-preset-light      { --hue: 220; }
+body.theme-preset-earthquake,
+body.theme-preset-light      { --hue: 215; }
 body.theme-preset-corporate,
 body.theme-preset-business   { --hue: 215; }
+body.theme-preset-indigo     { --hue: 240; }
 body.theme-preset-winter,
 body.theme-preset-nord,
 body.theme-preset-aqua       { --hue: 200; }
+body.theme-preset-teal       { --hue: 180; }
+body.theme-preset-forest     { --hue: 160; }
 body.theme-preset-emerald,
-body.theme-preset-garden,
-body.theme-preset-forest     { --hue: 148; }
+body.theme-preset-garden     { --hue: 148; }
 body.theme-preset-cupcake,
 body.theme-preset-valentine  { --hue: 340; }
+body.theme-preset-rose       { --hue: 330; }
 body.theme-preset-bumblebee,
 body.theme-preset-lemonade   { --hue: 58;  }
+body.theme-preset-orange     { --hue: 45;  }
 body.theme-preset-retro,
 body.theme-preset-autumn,
 body.theme-preset-caramellatte { --hue: 28; }
@@ -217,17 +229,8 @@ body .markdown-body a {
 
 .menu-sticky {
   @apply drop-shadow-md;
-  /* backdrop-filter with fallback for low-end devices */
   -webkit-backdrop-filter: saturate(180%) blur(16px);
   backdrop-filter: saturate(180%) blur(16px);
-}
-
-/* Progressive enhancement: use stronger blur only when backdrop-filter is supported */
-@supports (backdrop-filter: blur(1px)) {
-  .menu-sticky {
-    -webkit-backdrop-filter: saturate(180%) blur(16px);
-    backdrop-filter: saturate(180%) blur(16px);
-  }
 }
 
 #header-menu.header-menu-glass {
@@ -463,4 +466,10 @@ select {
   .reading-progress-fill {
     transition: none;
   }
+}
+
+/* Scroll to top button — initial hidden state (avoid inline style) */
+.btn-scroll-to-top {
+  opacity: 0;
+  pointer-events: none;
 }

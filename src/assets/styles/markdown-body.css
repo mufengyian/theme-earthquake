@@ -1,44 +1,105 @@
-@import url("./github-markdown.css");
 @reference "./tailwind.css";
 
+/*
+ * Markdown body styling — uses Tailwind Typography (@tailwindcss/typography)
+ * for consistent, readable article content.
+ *
+ * Code syntax highlighting is handled by the Shiki plugin
+ * (https://github.com/halo-sigs/plugin-shiki) which auto-injects
+ * <shiki-code> elements with its own CSS. This file only provides
+ * prose layout + a few custom overrides.
+ */
 .markdown-body {
-  background-color: transparent !important;
-  font-family: inherit;
+  @apply prose prose-sm md:prose-base dark:prose-invert max-w-none;
+
+  /* Override prose defaults to match earthquake's design system */
+  --tw-prose-body: var(--earthquake-text);
+  --tw-prose-headings: var(--earthquake-text);
+  --tw-prose-links: var(--earthquake-primary);
+  --tw-prose-bold: var(--earthquake-text);
+  --tw-prose-counters: var(--earthquake-muted);
+  --tw-prose-bullets: var(--earthquake-muted);
+  --tw-prose-hr: var(--earthquake-border);
+  --tw-prose-quotes: var(--earthquake-text);
+  --tw-prose-quote-borders: var(--earthquake-border);
+  --tw-prose-code: var(--earthquake-text);
+  --tw-prose-pre-bg: var(--earthquake-surface-muted);
+  --tw-prose-th-borders: var(--earthquake-border);
+  --tw-prose-td-borders: var(--earthquake-border);
 
   line-height: 1.75;
 
-  ul {
-    list-style: disc;
-  }
-
-  ol {
-    list-style: decimal;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  /* Headings: prose default has no borders, keep it clean */
+  h1, h2, h3, h4, h5, h6 {
     border: none !important;
   }
 
+  /* Tables: ensure borders are visible (prose default border-width can be 0
+     when CSS variables are overridden). */
+  table {
+    width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid var(--earthquake-border) !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  th {
+    background-color: var(--earthquake-surface-muted);
+    font-weight: 600;
+  }
+
+  tr:nth-child(even) {
+    background-color: var(--earthquake-surface-muted);
+  }
+
+  /* Code blocks: Shiki handles syntax highlighting.
+     Let Shiki's <shiki-code> wrapper control the pre styling. */
   pre {
     padding: 0 !important;
+    background: transparent !important;
 
     code {
-      border: 1px solid var(--earthquake-border);
+      border: none;
     }
   }
 
+  /* Inline code */
+  :not(pre) > code {
+    background-color: var(--earthquake-surface-muted);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+
+  /* Images in paragraphs */
   p > img {
     border-radius: 0.4rem;
-    overflow: hidden;
     @apply shadow;
   }
 
-  :not(pre) > code {
-    background-color: var(--earthquake-surface-muted);
+  /* Shiki plugin applies blur(10px) to unrendered code blocks.
+     Override to show plain text immediately (no blur flash). */
+  shiki-code,
+  shiki-code > pre {
+    filter: none !important;
   }
+}
+
+/* Dark mode prose variable overrides */
+.dark .markdown-body {
+  --tw-prose-body: var(--earthquake-text);
+  --tw-prose-headings: var(--earthquake-text);
+  --tw-prose-links: var(--earthquake-primary);
+  --tw-prose-bold: var(--earthquake-text);
+  --tw-prose-counters: var(--earthquake-muted);
+  --tw-prose-bullets: var(--earthquake-muted);
+  --tw-prose-hr: var(--earthquake-border);
+  --tw-prose-quotes: var(--earthquake-text);
+  --tw-prose-quote-borders: var(--earthquake-border);
+  --tw-prose-code: var(--earthquake-text);
+  --tw-prose-pre-bg: var(--earthquake-surface-muted);
 }

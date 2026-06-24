@@ -24,7 +24,7 @@ import Layout from "../layouts/Layout.astro";
             th:style="|animation-delay: ${iterStat.index lt 12 ? iterStat.index * 0.06 : 0}s|"
           >
             <th:block
-              th:replace="~{modules/post-card :: post-card(${post},true,true,true,${list_layout == 'single' ? 'column' : 'row'})}"
+              th:replace="~{modules/post-card :: post-card(${post},true,true,true,${list_layout == 'single' ? 'column' : 'row'}, ${iterStat.index})}"
             ></th:block>
           </div>
         </th:block>

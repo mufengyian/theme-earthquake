@@ -87,17 +87,23 @@ spec:
           id: enable_glass_navbar
           label: 毛玻璃导航栏
           value: false
-        - $formkit: text
+        - $formkit: number
           if: $get(enable_glass_navbar).value
           name: glass_navbar_opacity
           label: 毛玻璃透明度
           value: "0.72"
+          min: "0"
+          max: "1"
+          step: "0.01"
           help: "填写 0 到 1，数值越小越透明。"
-        - $formkit: text
+        - $formkit: number
           if: $get(enable_glass_navbar).value
           name: glass_navbar_blur
           label: 毛玻璃模糊强度
           value: "0.75"
+          min: "0"
+          max: "1"
+          step: "0.01"
           help: "填写 0 到 1，数值越大越模糊。"
 
     - group: style
@@ -122,78 +128,32 @@ spec:
           label: 主题样式
           value: earthquake
           options:
-            - label: Earthquake
+            - label: 默认
               value: earthquake
-            - label: Light
-              value: light
-            - label: Cupcake
-              value: cupcake
-            - label: Bumblebee
-              value: bumblebee
-            - label: Emerald
-              value: emerald
-            - label: Corporate
-              value: corporate
-            - label: Retro
-              value: retro
-            - label: Cyberpunk
-              value: cyberpunk
-            - label: Valentine
-              value: valentine
-            - label: Garden
-              value: garden
-            - label: Lofi
-              value: lofi
-            - label: Pastel
-              value: pastel
-            - label: Fantasy
-              value: fantasy
-            - label: Wireframe
-              value: wireframe
-            - label: CMYK
-              value: cmyk
-            - label: Autumn
-              value: autumn
-            - label: Acid
-              value: acid
-            - label: Lemonade
-              value: lemonade
-            - label: Winter
-              value: winter
-            - label: Nord
-              value: nord
-            - label: Dark
-              value: dark
-            - label: Synthwave
-              value: synthwave
-            - label: Halloween
-              value: halloween
-            - label: Forest
-              value: forest
-            - label: Aqua
+            - label: 天蓝色
               value: aqua
-            - label: Black
-              value: black
-            - label: Luxury
-              value: luxury
-            - label: Dracula
-              value: dracula
-            - label: Business
-              value: business
-            - label: Night
-              value: night
-            - label: Coffee
-              value: coffee
-            - label: Dim
-              value: dim
-            - label: Sunset
-              value: sunset
-            - label: Abyss
-              value: abyss
-            - label: Silk
-              value: silk
-            - label: Caramellatte
-              value: caramellatte
+            - label: 靛蓝色
+              value: indigo
+            - label: 青绿色
+              value: teal
+            - label: 翡翠绿
+              value: emerald
+            - label: 墨绿色
+              value: forest
+            - label: 柠檬黄
+              value: bumblebee
+            - label: 暖橙色
+              value: orange
+            - label: 焦糖棕
+              value: retro
+            - label: 樱花粉
+              value: cupcake
+            - label: 玫红色
+              value: rose
+            - label: 紫罗兰
+              value: pastel
+            - label: 极简灰
+              value: lofi
 
         - $formkit: group
           name: color_scheme_settings
@@ -354,6 +314,10 @@ spec:
     - group: sidebar
       label: 侧边栏
       formSchema:
+        - $formkit: checkbox
+          name: show_on_page
+          label: 页面显示侧边栏
+          value: false
         - $formkit: array
           name: widgets
           label: 小部件
@@ -423,6 +387,33 @@ spec:
                           value: normal
                         - label: 图片
                           value: image
+            - $formkit: group
+              if: "$value.value === 'popular-posts'"
+              name: options
+              key: popular-posts-options
+              id: popular-posts-options
+              label: 热门文章选项
+              children:
+                - $formkit: number
+                  name: post_count
+                  label: 显示文章数
+                  value: 5
+                  min: 3
+                  max: 10
+                  step: 1
+                  help: "填写 3 到 10，默认 5 篇"
+            - $formkit: group
+              if: "$value.value === 'tags'"
+              name: options
+              key: tags-options
+              id: tags-options
+              label: 标签选项
+              children:
+                - $formkit: checkbox
+                  name: show_unused_tags
+                  label: 显示零使用的标签
+                  value: false
+                  help: "关闭后，未被使用过的标签不会显示出来"
 
     - group: footer
       label: 页脚

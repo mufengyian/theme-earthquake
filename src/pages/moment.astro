@@ -23,7 +23,7 @@ import Layout from "../layouts/Layout.astro";
               <div class="mb-2 flex items-center gap-2">
                 <span
                   class="text-xs text-gray-400 dark:text-slate-400"
-                  th:text="${#dates.format(moment.spec.releaseTime,'yyyy-MM-dd HH:mm')}"
+                  th:text="${#temporals.format(moment.spec.releaseTime,'yyyy-MM-dd HH:mm')}"
                 ></span>
               </div>
               <div

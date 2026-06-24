@@ -14,6 +14,7 @@ declare global {
       "th:attr"?: TemplateAttributeValue;
       "th:classappend"?: TemplateAttributeValue;
       "th:each"?: TemplateAttributeValue;
+      "th:fetchpriority"?: TemplateAttributeValue;
       "th:fragment"?: TemplateAttributeValue;
       "th:href"?: TemplateAttributeValue;
       "th:if"?: TemplateAttributeValue;
@@ -54,5 +55,6 @@ declare global {
     colorScheme: "dark" | "light" | "system";
     enableChangeColorScheme: boolean;
     enableColorSchemeAnimation: boolean;
+    showToast?: (message: string, type?: "info" | "error" | "success") => void;
   }
 }

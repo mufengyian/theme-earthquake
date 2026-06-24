@@ -1,27 +1,28 @@
 import type { ColorSchemeType } from "../utils/color-scheme";
 import { currentColorScheme, setColorScheme } from "../utils/color-scheme";
+import { i18n } from "../utils/i18n";
 
 export default () => ({
   colorSchemes: [
     {
-      label: window.i18nResources["jsModule.colorSchemeSwitcher.light"],
+      label: i18n("jsModule.colorSchemeSwitcher.light", "Light"),
       value: "light",
       icon: "icon-[gg--sun]",
     },
     {
-      label: window.i18nResources["jsModule.colorSchemeSwitcher.dark"],
+      label: i18n("jsModule.colorSchemeSwitcher.dark", "Dark"),
       value: "dark",
       icon: "icon-[gg--moon]",
     },
     {
-      label: window.i18nResources["jsModule.colorSchemeSwitcher.auto"],
+      label: i18n("jsModule.colorSchemeSwitcher.auto", "Auto"),
       value: "system",
       icon: "icon-[gg--dark-mode]",
     },
   ],
   currentValue: currentColorScheme,
   showColorSchemePicker: false,
-  colorSchemePickerTimer: 0,
+  colorSchemePickerTimer: undefined as number | undefined,
   get colorScheme() {
     return this.colorSchemes.find((x) => x.value === this.currentValue);
   },

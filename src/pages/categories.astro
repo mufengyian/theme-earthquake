@@ -32,9 +32,9 @@ import Layout from "../layouts/Layout.astro";
               class="mt-6 grid grid-cols-1 gap-6"
               th:classappend="|${list_layout == 'grid_3' ? 'md:grid-cols-2 xl:grid-cols-3' : ''} ${list_layout == 'grid_2' ? 'md:grid-cols-2' : ''}|"
             >
-              <th:block th:each="post : ${posts.items}">
+              <th:block th:each="post, iterStat : ${posts.items}">
                 <th:block
-                  th:replace="~{modules/post-card :: post-card(${post},true,true,true,${list_layout == 'single' ? 'column' : 'row'})}"
+                  th:replace="~{modules/post-card :: post-card(${post},true,true,true,${list_layout == 'single' ? 'column' : 'row'}, ${iterStat.index})}"
                 ></th:block>
               </th:block>
             </div>

@@ -1,3 +1,5 @@
+import { rafThrottle } from "./raf";
+
 type TocHeading = {
   id: string;
   level: number;
@@ -99,7 +101,14 @@ const renderTocList = (nodes: TocHeading[]) => {
 
     link.addEventListener("click", (event) => {
       event.preventDefault();
-      node.element.scrollIntoView({ block: "start", behavior: "smooth" });
+      // Use "auto" (instant) on touch devices to avoid the smooth-scroll
+      // jitter caused by scroll-behavior + scroll-padding-top + scrollIntoView
+      // fighting each other on mobile browsers.
+      const isTouch = window.matchMedia("(hover: none)").matches;
+      node.element.scrollIntoView({
+        block: "start",
+        behavior: isTouch ? "auto" : "smooth",
+      });
       history.pushState(null, "", `#${node.id}`);
       setActiveHeading(node.id);
     });
@@ -116,50 +125,52 @@ const renderTocList = (nodes: TocHeading[]) => {
   return list;
 };
 
-const setActiveHeading = (id: string) => {
-  document.querySelectorAll<HTMLAnchorElement>(".toc-link").forEach((link) => {
+const setActiveHeading = (id: string, tocLinks?: HTMLAnchorElement[]) => {
+  const links =
+    tocLinks ??
+    Array.from(document.querySelectorAll<HTMLAnchorElement>(".toc-link"));
+  const isTouch = window.matchMedia("(hover: none)").matches;
+  links.forEach((link) => {
     const active = link.hash === `#${id}`;
     link.classList.toggle("is-active-link", active);
     link.setAttribute("aria-current", active ? "true" : "false");
 
     if (active) {
-      link.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      // Only auto-scroll the TOC link into view on desktop.
+      // On mobile this scrollIntoView fights with page scroll causing jitter.
+      if (!isTouch) {
+        link.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
     }
   });
 };
 
 const createActiveHeadingUpdater = (headings: HTMLHeadingElement[]) => {
-  let updateScheduled = false;
+  // 缓存所有 TOC 链接，避免每次滚动都 querySelectorAll
+  const tocLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>(".toc-link"),
+  );
 
   const update = () => {
-    updateScheduled = false;
-
     const activeHeading =
-      headings.findLast(
+      [...headings].reverse().find(
         (heading) => heading.getBoundingClientRect().top <= 120,
       ) ?? headings[0];
 
     if (activeHeading) {
-      setActiveHeading(activeHeading.id);
+      setActiveHeading(activeHeading.id, tocLinks);
     }
   };
 
-  const scheduleUpdate = () => {
-    if (updateScheduled) {
-      return;
-    }
+  const throttledUpdate = rafThrottle(update);
 
-    updateScheduled = true;
-    window.requestAnimationFrame(update);
-  };
-
-  window.addEventListener("scroll", scheduleUpdate, { passive: true });
-  window.addEventListener("resize", scheduleUpdate, { passive: true });
-  scheduleUpdate();
+  window.addEventListener("scroll", throttledUpdate, { passive: true });
+  window.addEventListener("resize", throttledUpdate, { passive: true });
+  update();
 
   return () => {
-    window.removeEventListener("scroll", scheduleUpdate);
-    window.removeEventListener("resize", scheduleUpdate);
+    window.removeEventListener("scroll", throttledUpdate);
+    window.removeEventListener("resize", throttledUpdate);
   };
 };
 

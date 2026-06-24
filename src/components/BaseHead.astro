@@ -1,7 +1,19 @@
-<meta charset="UTF-8" />
+<meta charset="utf-8" />
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1, maximum-scale=2"
+/>
+<meta
+  th:if="${theme.config.style.color_scheme_settings?.color_scheme != 'light'}"
+  name="theme-color"
+  media="(prefers-color-scheme: dark)"
+  th:content="${theme.config.style.style_preset == 'earthquake' ? '#0f172a' : '#1e293b'}"
+/>
+<meta
+  th:if="${theme.config.style.color_scheme_settings?.color_scheme != 'dark'}"
+  name="theme-color"
+  media="(prefers-color-scheme: light)"
+  content="#ffffff"
 />
 <link
   th:unless="${#strings.isEmpty(site.logo)}"
@@ -36,9 +48,9 @@
   th:content="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
 />
 <meta
-  th:if="${post?.spec?.publishTime != null}"
+  th:if="${post?.status?.lastModifyTime != null and !#strings.equals(#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX'), #temporals.format(post.status.lastModifyTime, 'yyyy-MM-dd''T''HH:mm:ssXXX'))}"
   property="article:modified_time"
-  th:content="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
+  th:content="${#temporals.format(post.status.lastModifyTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
 />
 </th:block>
 
@@ -84,7 +96,7 @@
   "@type": "BlogPosting",
   "headline": [[${post.spec.title}]],
   "datePublished": [[${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}]],
-  "dateModified": [[${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}]],
+  "dateModified": [[${post.status?.lastModifyTime != null and !#strings.equals(#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX'), #temporals.format(post.status.lastModifyTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')) ? #temporals.format(post.status.lastModifyTime, 'yyyy-MM-dd''T''HH:mm:ssXXX') : #temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}]],
   "author": {
     "@type": "Person",
     "name": [[${site.title}]]
@@ -120,6 +132,7 @@
   href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.2.5/400.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
+  onerror="this.onload=null"
   crossorigin
 />
 <link
@@ -128,6 +141,7 @@
   href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.2.5/500.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
+  onerror="this.onload=null"
   crossorigin
 />
 <link
@@ -136,6 +150,7 @@
   href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.2.5/700.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
+  onerror="this.onload=null"
   crossorigin
 />
 <link
@@ -144,6 +159,7 @@
   href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5.2.9/400.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
+  onerror="this.onload=null"
   crossorigin
 />
 <link
@@ -152,6 +168,7 @@
   href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5.2.9/500.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
+  onerror="this.onload=null"
   crossorigin
 />
 <link
@@ -160,6 +177,7 @@
   href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5.2.9/700.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
+  onerror="this.onload=null"
   crossorigin
 />
 <link
@@ -168,6 +186,7 @@
   href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-light.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
+  onerror="this.onload=null"
   crossorigin
 />
 <link
@@ -176,6 +195,7 @@
   href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
+  onerror="this.onload=null"
   crossorigin
 />
 <link
@@ -184,6 +204,7 @@
   href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-bold.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
+  onerror="this.onload=null"
   crossorigin
 />
 
