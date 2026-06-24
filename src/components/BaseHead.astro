@@ -256,13 +256,6 @@
 
   initColorScheme(earthWindow.colorScheme, earthWindow.enableChangeColorScheme);
 </script>
-<!-- 自定义代码注入（head 部分） -->
-<th:block th:if="${theme.config.custom_code?.head_html}">
-  <th:block th:utext="${theme.config.custom_code.head_html}" />
-</th:block>
-<th:block th:if="${theme.config.custom_code?.custom_css}">
-  <style th:utext="${theme.config.custom_code.custom_css}"></style>
-</th:block>
 <noscript>
   <style>
     body {
