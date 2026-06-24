@@ -1,8 +1,8 @@
 <div
-  th:fragment="post-card(post,cover,animation,border,direction)"
+  th:fragment="post-card(post,cover,animation,border,direction,index)"
   class="group flex flex-col overflow-hidden rounded-xl bg-white shadow-md ring-black transition-all duration-500 hover:shadow-lg dark:bg-slate-800 dark:ring-slate-700"
-  th:with="postCardDisplay=${theme.config.layout.post_card_display}, list_layout=${theme.config.layout.post_list_layout}"
-  th:classappend="${animation  ? 'hover:-translate-y-1' : ''} + ' ' + ${border ? 'hover:ring-2' : ''} + ' ' + ${direction == 'column' ? '!grid grid-cols-1 sm:grid-cols-5' : ''}"
+  th:with="postCardDisplay=${theme.config.layout.post_card_display}, list_layout=${theme.config.layout.post_list_layout}, isFirst=${index != null and index == 0}"
+  th:classappend="|${animation ? 'hover:-translate-y-1' : ''} ${border ? 'hover:ring-2' : ''} ${direction == 'column' ? '!grid grid-cols-1 sm:grid-cols-5' : ''}|"
 >
   <div
     th:if="${cover} and ${not #strings.isEmpty(post.spec.cover)}"
@@ -17,7 +17,8 @@
                     ${thumbnail.gen(post.spec.cover, 'm')} 800w,
                     ${thumbnail.gen(post.spec.cover, 'l')} 1200w|"
         sizes="(max-width: 1200px) 100vw, 1200px"
-        loading="lazy"
+        th:loading="${isFirst ? 'eager' : 'lazy'}"
+        th:fetchpriority="${isFirst ? 'high' : null}"
         decoding="async"
         class="size-full object-cover transition-all duration-500"
         th:classappend="${animation} ? 'group-hover:scale-105'"

@@ -1,3 +1,5 @@
+import { i18n } from "../utils/i18n";
+
 interface UpvoteState {
   upvotedNames: string[];
   init(): void;
@@ -67,7 +69,11 @@ export default (key: string, group: string, plural: string): UpvoteState => ({
     ).catch(() => undefined);
 
     if (!response?.ok) {
-      alert(window.i18nResources["jsModule.upvote.networkError"]);
+      const { showToast } = window as unknown as {
+        showToast?: (msg: string, type?: "error") => void;
+      };
+      const msg = i18n("jsModule.upvote.networkError", "Network error, please try again");
+      showToast?.(msg, "error");
       return;
     }
 
@@ -82,17 +88,15 @@ export default (key: string, group: string, plural: string): UpvoteState => ({
       // Ignore storage failures so the visible count can still update.
     }
 
-    const upvoteNode = Array.from(
+    const upvoteNodes = Array.from(
       document.querySelectorAll<HTMLElement>(`[data-upvote-${key}-name]`),
-    ).find((node) => node.getAttribute(`data-upvote-${key}-name`) === target);
+    ).filter((node) => node.getAttribute(`data-upvote-${key}-name`) === target);
 
-    if (!upvoteNode) {
-      return;
-    }
-
-    const upvoteCount = Number.parseInt(upvoteNode.textContent || "0", 10);
-    upvoteNode.textContent = String(
-      (Number.isNaN(upvoteCount) ? 0 : upvoteCount) + 1,
-    );
+    upvoteNodes.forEach((node) => {
+      const upvoteCount = Number.parseInt(node.textContent || "0", 10);
+      node.textContent = String(
+        (Number.isNaN(upvoteCount) ? 0 : upvoteCount) + 1,
+      );
+    });
   },
 });

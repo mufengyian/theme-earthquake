@@ -126,78 +126,45 @@
   href="https://cdn.jsdelivr.net"
   crossorigin
 />
-<link
+<th:block
   th:if="${theme.config.style.font_family == 'noto_sans_sc'}"
-  rel="preload"
-  href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.2.5/400.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-  crossorigin
-/>
-<link
-  th:if="${theme.config.style.font_family == 'noto_sans_sc'}"
-  rel="preload"
-  href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.2.5/500.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-  crossorigin
-/>
-<link
-  th:if="${theme.config.style.font_family == 'noto_sans_sc'}"
-  rel="preload"
-  href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.2.5/700.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-  crossorigin
-/>
-<link
+  th:each="weight : ${{'400': '400', '500': '500', '700': '700'}}"
+>
+  <link
+    rel="preload"
+    th:href="@{https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.2.5/{weight}.css}"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+    onerror="this.onload=null"
+    crossorigin
+  />
+</th:block>
+<th:block
   th:if="${theme.config.style.font_family == 'noto_serif_sc'}"
-  rel="preload"
-  href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5.2.9/400.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-  crossorigin
-/>
-<link
-  th:if="${theme.config.style.font_family == 'noto_serif_sc'}"
-  rel="preload"
-  href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5.2.9/500.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-  crossorigin
-/>
-<link
-  th:if="${theme.config.style.font_family == 'noto_serif_sc'}"
-  rel="preload"
-  href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5.2.9/700.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-  crossorigin
-/>
-<link
+  th:each="weight : ${{'400': '400', '500': '500', '700': '700'}}"
+>
+  <link
+    rel="preload"
+    th:href="@{https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5.2.9/{weight}.css}"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+    onerror="this.onload=null"
+    crossorigin
+  />
+</th:block>
+<th:block
   th:if="${theme.config.style.font_family == 'lxgw_wenkai'}"
-  rel="preload"
-  href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-light.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-  crossorigin
-/>
-<link
-  th:if="${theme.config.style.font_family == 'lxgw_wenkai'}"
-  rel="preload"
-  href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-  crossorigin
-/>
-<link
-  th:if="${theme.config.style.font_family == 'lxgw_wenkai'}"
-  rel="preload"
-  href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-bold.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-  crossorigin
-/>
+  th:each="variant : ${{'light': 'lxgwwenkai-light', 'regular': 'lxgwwenkai-regular', 'bold': 'lxgwwenkai-bold'}}"
+>
+  <link
+    rel="preload"
+    th:href="@{https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/{variant}.css}"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+    onerror="this.onload=null"
+    crossorigin
+  />
+</th:block>
 
 <!-- Color scheme init: blocking inline script to prevent FOUC -->
 <script is:inline th:inline="javascript">

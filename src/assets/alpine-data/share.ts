@@ -1,5 +1,7 @@
 const themeBaseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
 
+import { i18n } from "../utils/i18n";
+
 type ShareItem = {
   id: string;
   name: string;
@@ -80,35 +82,35 @@ export default (shareIds: string | string[]) =>
       },
       {
         id: "qzone",
-        name: window.i18nResources["jsModule.share.qzone"],
+        name: i18n("jsModule.share.qzone", "QQ Zone"),
         icon: "icon-[simple-icons--qzone]",
         type: "url",
         url: `https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url={url}&title={title}`,
       },
       {
         id: "weibo",
-        name: window.i18nResources["jsModule.share.weibo"],
+        name: i18n("jsModule.share.weibo", "Weibo"),
         icon: "icon-[simple-icons--sinaweibo]",
         type: "url",
         url: `https://service.weibo.com/share/share.php?url={url}&title={title}`,
       },
       {
         id: "douban",
-        name: window.i18nResources["jsModule.share.douban"],
+        name: i18n("jsModule.share.douban", "Douban"),
         icon: "icon-[simple-icons--douban]",
         type: "url",
         url: `https://www.douban.com/share/service?href={url}&name={title}`,
       },
       {
         id: "wechat",
-        name: window.i18nResources["jsModule.share.wechat"],
+        name: i18n("jsModule.share.wechat", "WeChat"),
         icon: "icon-[simple-icons--wechat]",
         type: "url",
         url: `${themeBaseUrl}/assets/qrcode-share.html?url={url}`,
       },
       {
         id: "native",
-        name: window.i18nResources["jsModule.share.native"],
+        name: i18n("jsModule.share.native", "Native Share"),
         icon: "icon-[tabler--device-desktop]",
         type: "native",
       },
@@ -151,7 +153,7 @@ export default (shareIds: string | string[]) =>
           url: this.permalink,
           title: this.title,
         }),
-        `${window.i18nResources["jsModule.share.windowTitle"]} - ${this.title}`,
+        `${i18n("jsModule.share.windowTitle", "Share")} - ${this.title}`,
         windowParams,
       );
     },

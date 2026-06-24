@@ -13,15 +13,17 @@ import upvote from "./alpine-data/upvote";
 import "./components/number-formatter";
 import { initImagePreview } from "./utils/image-preview";
 import { generateToc } from "./utils/toc";
-
-const earthWindow = window as Window & typeof globalThis;
+import { showToast } from "./utils/toast";
 
 let scrollUpdateScheduled = false;
 let headerMenu: HTMLElement | null = null;
 let scrollToTopButton: HTMLElement | null = null;
 let readingProgressBar: HTMLElement | null = null;
 
-earthWindow.Alpine = Alpine;
+// 暴露 toast 到全局供 Alpine 组件使用
+(window as unknown as Record<string, unknown>).showToast = showToast;
+
+window.Alpine = Alpine;
 
 Alpine.data("dropdown", dropdown);
 Alpine.data("colorSchemeSwitcher", colorSchemeSwitcher);

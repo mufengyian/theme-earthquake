@@ -1,5 +1,8 @@
 <template x-teleport="body">
-  <div>
+  <div
+    x-data="{ focusTrap: null, focusableSelector: 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex=\"-1\"])', installTrap() { const root = this.$refs.modal; if (!root) return; const handler = (e) => { if (e.key !== 'Tab') return; const els = Array.from(root.querySelectorAll(this.focusableSelector)).filter(el => el.offsetParent !== null); if (els.length === 0) return; const first = els[0], last = els[els.length - 1]; if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } } else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } } }; root.addEventListener('keydown', handler); this.focusTrap = () => root.removeEventListener('keydown', handler); }, removeTrap() { this.focusTrap?.(); this.focusTrap = null; } }"
+    x-init="$watch('shareModal', v => { if (v) { $nextTick(() => { $refs.modal?.focus(); installTrap(); }); } else { removeTrap(); } })"
+  >
     <div
       class="fixed inset-0 z-50 bg-gray-800/40 opacity-100 backdrop-blur-sm dark:bg-black/80"
       aria-hidden="true"
@@ -29,8 +32,10 @@
         class="flex min-h-full flex-col items-center justify-center p-4 text-center sm:p-0"
       >
         <div
+          x-ref="modal"
+          tabindex="-1"
           @click.outside="shareModal = false"
-          class="relative my-4 transform overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl transition-all dark:bg-slate-800 dark:text-slate-100 sm:w-full sm:max-w-xl"
+          class="relative my-4 transform overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl transition-all focus:outline-none dark:bg-slate-800 dark:text-slate-100 sm:w-full sm:max-w-xl"
         >
           <h1
             class="text-lg font-semibold"
