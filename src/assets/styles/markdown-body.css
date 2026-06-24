@@ -34,6 +34,28 @@
     border: none !important;
   }
 
+  /* Tables: ensure borders are visible (prose default border-width can be 0
+     when CSS variables are overridden). */
+  table {
+    width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid var(--earthquake-border) !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  th {
+    background-color: var(--earthquake-surface-muted);
+    font-weight: 600;
+  }
+
+  tr:nth-child(even) {
+    background-color: var(--earthquake-surface-muted);
+  }
+
   /* Code blocks: Shiki handles syntax highlighting.
      Let Shiki's <shiki-code> wrapper control the pre styling. */
   pre {
